@@ -1,0 +1,68 @@
+
+buildscript {
+     repositories {
+        google()
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("com.android.tools.build:gradle:7.0.4")
+        classpath("com.facebook.react:react-native-gradle-plugin")
+        classpath("de.undercouch:gradle-download-task:4.1.2")
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "26.0.1"
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+    }
+    lintOptions {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
+
+    sourceSets.main.jniLibs.srcDirs=['libs']
+
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
+}
+
+repositories {
+    mavenLocal()
+    jcenter()
+    maven(){ url 'https://maven.aliyun.com/repository/releases' }
+    maven{ url "https://maven.aliyun.com/nexus/content/repositories/releases" }
+}
+
+dependencies {
+    //implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.facebook.react:react-native:+'
+    implementation 'com.android.support:appcompat-v7:23.2.1'
+    api (name: 'phoneNumber-L-AuthSDK-2.12.1.2',ext:'aar')
+    api (name: 'crashshield-2.0.3-release',ext:'aar')
+    api (name: 'logger-2.0.3-release',ext:'aar')
+    api (name: 'main-2.0.3-release',ext:'aar')
+    //implementation files ( 'phoneNumber-L-AuthSDK-2.12.1.2.aar')
+    //implementation files ( 'crashshield-2.0.3-release.aar')
+    //implementation files ( 'logger-2.0.3-release.aar')
+    //implementation files ( 'main-2.0.3-release.aar')
+    implementation 'com.alibaba:fastjson:1.2.60' // 配置对json的依赖
+}
