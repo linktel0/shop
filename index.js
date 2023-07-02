@@ -1,6 +1,6 @@
 import { registerRootComponent } from 'expo';
 import 'expo-asset';
-import App0 from './App';
+import App0 from './App'; 
 //import App from './packages/ecommerce-expo/App';
 
 // registerRootComponent calls AppRegistry.registerComponent('main', () => App);
