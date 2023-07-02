@@ -49,6 +49,7 @@
     "react-native-simple-biometrics": "^1.5.0",
     "react-native-snap-carousel": "^3.9.1",
     "react-native-svg": "13.4.0",
+    "react-native-vector-icons": "^9.2.0",
     "react-native-web": "~0.18.7",
     "react-native-wechat-lib": "^1.1.27",
     "react-navigation-shared-element": "^3.1.3",

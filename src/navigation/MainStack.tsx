@@ -2,8 +2,6 @@ import { TransitionPresets } from "@react-navigation/stack";
 import { TransitionSpec } from "@react-navigation/stack/lib/typescript/src/types";
 import React from "react";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import BagScreen from "../screens/BagScreen";
-import CategoryScreen from "../screens/CategoryScreen";
 import ComponentsScreen from "../screens/ComponentsScreen";
 import HomeScreen from "../screens/HomeScreen";
 import OrderDetailScreen from "../screens/OrderDetailScreen";
@@ -36,7 +34,7 @@ const MainStack = () => {
             <Stack.Screen name="Home" component={HomeScreen} />
             {/*<Stack.Screen name="Components" component={ComponentsScreen} />*/}
 
-            <Stack.Screen name="Bag_Main" component={BagScreen} />
+            <Stack.Screen name="Bag_Main" component={screens.BagScreen} />
             <Stack.Screen name="Favorite_Main" component={screens.FavoriteScreen} />
 
             <Stack.Screen name="Profile_Main" component={screens.ProfileScreen} />
@@ -61,7 +59,7 @@ const MainStack = () => {
 
             <Stack.Screen name="Shop_Main" component={ShopScreen} />
             <Stack.Screen name="Shop_Search" component={SearchScreen}/>
-            <Stack.Screen name="Shop_Category" component={CategoryScreen}/>
+            <Stack.Screen name="Shop_Category" component={screens.CategoryScreen}/>
             <Stack.Screen name="Shop_Product_Detail" component={ProductDetail}/> 
         </Stack.Navigator>
     );

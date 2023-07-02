@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, ScrollView } from "react-native";
 import BottomTab from "../components/navigation/BottomTab";
-import {Header} from "../components/navigation/Header";
+import Header from "../components/navigation/Header";
 import {ShopScreenProps} from "../navigation/ScreensNavigationRouteProps";
 import * as display from '../redux/display'
 import { useAppSelector } from "../redux/hooks";

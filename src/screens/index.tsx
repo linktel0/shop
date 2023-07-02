@@ -5,6 +5,9 @@ export {AuthenticationScreen} from './AuthenticationScreen'
 export {AdvertiseScreen} from './AdvertiseScreen'
 export {ProfileScreen} from './ProfileScreen'
 export {FavoriteScreen} from './FavoriteScreen'
+export {BagScreen} from './BagScreen'
+export {CategoryScreen} from './CategoryScreen'
+
 export {NewShippingAddressScreen} from './NewShippingAddressScreen'
 export {ShippingAddressesScreen} from './ShippingAddressesScreen'
 /*

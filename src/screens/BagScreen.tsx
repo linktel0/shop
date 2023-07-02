@@ -31,7 +31,7 @@ const { width, height } = Dimensions.get("screen");
 const HEADER_HEIGHT = height * 0.12;
 
 
-const BagScreen = ({ navigation, route }:BagScreenProps) => {
+export const BagScreen = ({ navigation, route }:BagScreenProps) => {
     const [prices, setPrices] = useState(new Map());
     const [total, setTotal] = useState(0);
     const [address,setAddress] = useState<TAddress>();
@@ -246,4 +246,4 @@ const BagScreen = ({ navigation, route }:BagScreenProps) => {
     );
 };
 
-export default BagScreen;
+
