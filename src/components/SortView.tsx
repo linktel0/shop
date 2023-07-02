@@ -1,21 +1,13 @@
 import React, { useState } from "react";
-import {} from "react-native";
-
-import { BoxProps, useTheme } from "@shopify/restyle";
-import { Box, Text } from "../utils/restyle";
-import { Theme } from "../utils/theme";
-
+import {View,Text,TouchableOpacity,ScrollView} from "react-native";
 import Animated, {
     useAnimatedStyle,
     withTiming,
 } from "react-native-reanimated";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
-import ExitIcon from "./forms/form_elements/ExitIcon";
-import Selectables from "./Selectables";
-import SelectableColors from "./SelectableColors";
-import Button from "./forms/form_elements/Button";
+//import { ScrollView } from "react-native-gesture-handler";
+import {IconButton,Button} from 'react-native-paper'
 
-interface SortViewProps extends BoxProps<Theme> {
+interface SortViewProps {
     width: number;
     height: number;
     onClose(): void;
@@ -23,91 +15,61 @@ interface SortViewProps extends BoxProps<Theme> {
     onApply(v: 'Heighest' | 'Lowest' | 'Relevance'): void;
 }
 
-const AnimatedBox = Animated.createAnimatedComponent(Box);
-
-const SortView: React.FC<SortViewProps> = ({
+const SortView = ({
     width,
     height,
     onClose,
     translateY,
     onApply,
-    ...rest
-}) => {
-    const theme = useTheme<Theme>();
+}:SortViewProps) => {
 
     const [selected, setSelected] = useState<'Heighest' | 'Lowest' | 'Relevance'>("Relevance");
-
     const styles = useAnimatedStyle(() => ({
         transform: [{ translateY: withTiming(translateY.value) }],
     }));
     return (
-        <AnimatedBox
-            width={width}
-            height={height}
-            borderTopLeftRadius="xl"
-            borderTopRightRadius="xl"
-            bg="white"
-            elevation={20}
-            position={"absolute"}
-            bottom={0}
-            zIndex={7777777}
+        <Animated.View className="w-full bg-secondary-light/100 absolute bottom-0 z-50 rounded-2xl"
             style={styles}
-            {...rest}
         >
-            <Box position="absolute" top={-15} left={width / 2 - 15}>
-                <TouchableOpacity>
-                    <ExitIcon onPress={onClose} />
-                </TouchableOpacity>
-            </Box>
+            <View className="w-full center-x"> 
+                    <IconButton className="w-8 h-8 bg-secondary-light rounded-full items-center -mt-4"
+                        icon="close"
+                        size={24}
+                        onPress={onClose}
+                    />
+            </View>
             <ScrollView
                 showsVerticalScrollIndicator={false}
-                style={{ flex: 1, marginTop: theme.spacing.xl }}
+                style={{ flex: 1, marginTop: 16 }}
             >
-                <Box>
-                    <TouchableOpacity onPress={() => setSelected('Relevance')}>
-                        <Box bg={selected === 'Relevance' ?  "primary" : 'white'} padding="m">
-                            <Text
-                                paddingHorizontal="m"
-                                variant="body2"
-                                color={selected === 'Relevance' ?  "white" : 'black'}
-                            >
-                                Relevance
-                            </Text>
-                        </Box>
+                <View>
+                    <TouchableOpacity className={`items-center mb-1 p-2 ${selected === 'Relevance' ?  'bg-primary/80' : 'bg-secondary-light'}`}
+                        onPress={() =>  setSelected('Relevance')}>
+                        <Text className={`text-lg ${selected === 'Relevance' ? 'text-primary-light' : 'text-primary-dark'}`}>
+                            不按价格排序
+                        </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity  onPress={() => setSelected('Lowest')}>
-                        <Box bg={selected === 'Lowest' ?  "primary" : 'white'} padding="m">
-                            <Text
-                                paddingHorizontal="m"
-                                variant="body2"
-                                color={selected === 'Lowest' ? "white" : 'black'}
-                            >
-                                Price lowest to heighest
-                            </Text>
-                        </Box>
+                    <TouchableOpacity  className={`items-center mb-1 p-2 ${selected === 'Lowest' ?  'bg-primary/80' : 'bg-secondary-light'}`}
+                        onPress={() => setSelected('Lowest')}>
+                        <Text className={`text-lg ${selected === 'Lowest' ? 'text-primary-light' : 'text-primary-dark'}`}>
+                            价格由低到高
+                        </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => setSelected('Heighest')}>
-                        <Box bg={selected === 'Heighest' ?  "primary" : 'white'} padding="m">
-                            <Text
-                                paddingHorizontal="m"
-                                variant="body2"
-                                color={selected === 'Heighest' ?  "white": 'black'}
-                            >
-                                Price heighest to lowest
-                            </Text>
-                        </Box>
+                    <TouchableOpacity className={`items-center p-2 ${selected === 'Heighest' ?  'bg-primary/80' : 'bg-secondary-light'}`}
+                        onPress={() => setSelected('Heighest')}>
+                        <Text className={`text-lg ${selected === 'Heighest' ? 'text-primary-light' : 'text-primary-dark'}`}>
+                            价格由高到低
+                        </Text>
                     </TouchableOpacity>
 
-                    <Box paddingHorizontal="m">
-                        <Button
-                            title="APPLY"
-                            variant="PRIMARY"
-                            onPress={() => onApply(selected)}
-                        />
-                    </Box>
-                </Box>
+                    <Button className="bg-primary m-4 rounded-full p-2"
+                        textColor="white"
+                        onPress={() => onApply(selected)}>
+                        APPLY
+                    </Button>
+                </View>
             </ScrollView>
-        </AnimatedBox>
+        </Animated.View>
     );
 };
 

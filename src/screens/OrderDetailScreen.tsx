@@ -1,129 +1,65 @@
-import { Ionicons } from "@expo/vector-icons";
-import { useTheme } from "@shopify/restyle";
 import React from "react";
-import { Dimensions, Image } from "react-native";
+import { Dimensions, Image, View,Text } from "react-native";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
-import { SharedElement } from "react-navigation-shared-element";
-import Layout from "../components/Layout";
 import BottomTab from "../components/navigation/BottomTab";
 import Header from "../components/navigation/Header";
-import {
-    OrderDetailScreenNavigationProps,
-    OrderDetailScreenRouteProps,
-} from "../navigation/ScreensNavigationRouteProps";
+import {OrderDetailScreenProps} from "../navigation/ScreensNavigationRouteProps";
 import { OrderStatus } from "../redux/data_types";
 import { useAppSelector } from "../redux/hooks";
-import { Box, Text } from "../utils/restyle";
-import { Theme } from "../utils/theme";
 
-interface OrderDetailScreenProps {
-    navigation: OrderDetailScreenNavigationProps;
-    route: OrderDetailScreenRouteProps;
-}
 const { width, height } = Dimensions.get("screen");
 const HEADER_HEIGHT = height * 0.12;
 
-const OrderDetailScreen: React.FC<OrderDetailScreenProps> = ({
+const OrderDetailScreen = ({
     navigation,
     route,
-}) => {
-    const theme = useTheme<Theme>();
+}:OrderDetailScreenProps) => {
     const defaultShippingAddress = useAppSelector(
         (state) => state.user.current_user?.shipping_addresses
     )?.find((s) => s.is_default);
 
     return (
-        <Layout>
-            <Header
-                height={HEADER_HEIGHT}
-                title="Order Detail"
-                position="absolute"
-                paddingHorizontal='m'
-                elevation={1}
-                top={0}
-                left_icon={
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate("Profile_Main")}
-                    >
-                        <Ionicons
-                            name="arrow-back"
-                            size={30}
-                            color={theme.colors.darkColor}
-                        />
-                    </TouchableOpacity>
-                }
-            />
-            <BottomTab route_name={route.name} position="absolute" bottom={0} />
-            <ScrollView
-                style={{
-                    flex: 1,
-                    marginBottom: height * 0.1,
-                    marginTop: HEADER_HEIGHT - theme.spacing.l,
-                }}
-            >
-                <Box marginTop="m" marginBottom='s' marginHorizontal='m' bg='white' p='m' borderRadius='m'>
-                    <Box
-                        flexDirection="row"
-                        justifyContent="space-between"
-                        alignItems="center"
-                        marginBottom="s"
-                    >
-                        <Box flexDirection="row" alignItems="center">
-                            <Text variant="body" opacity={0.5}>
+        <View className="w-full h-full bg-primary-light">
+            <Header title="Order Detail" goBack={() => navigation.navigate("Profile_Main")}/>
+            <BottomTab route_name={route.name} />
+            <ScrollView className="flex-1 mb-12 mt-20">
+                <View className="m-4 bg-primary-light p-2 rounded-xl" >
+                    <View className="between-x mb-4">
+                        <View className="center-x">
+                            <Text className="opacity-50">
                                 {`Tracking N: `}
                             </Text>
-                            <Text variant="body">
+                            <Text className="opacity-50">
                                 {route.params.order.tracking_number}
                             </Text>
-                        </Box>
-                        <Text variant="body2" opacity={0.7}>
+                        </View>
+                        <Text className="opacity-70 font-bold">
                             {route.params.order.date}
                         </Text>
-                    </Box>
-                    <Box
-                        flexDirection="row"
-                        justifyContent="space-between"
-                        alignItems="center"
-                        
-                        marginBottom="s"
-                    >
-                        <Text variant="body" opacity={0.5}>
+                    </View> 
+                    <View className="between-x mb-4">
+                        <Text className="opacity-50">
                             Status:
                         </Text>
-                        <Text
-                            variant="body2"
-                            color={
-                                route.params.order.status ===
-                                OrderStatus.SUCCESS
-                                    ? "success"
-                                    : route.params.order.status ===
-                                      OrderStatus.PENDING
-                                    ? "darkColor"
-                                    : "error"
-                            }
+                        <Text className={`opacity-70 font-bold
+                            ${route.params.order.status === OrderStatus.SUCCESS
+                                ? "text-success"
+                                : route.params.order.status === OrderStatus.PENDING
+                                ? "text-darkColor"
+                                : "text-error"
+                            }`}
                         >
                             {route.params.order.status}
                         </Text>
-                    </Box>
-                </Box>
-                <Box marginVertical="s">
-                    <Text
-                        marginHorizontal="m"
-                        marginVertical="s"
-                        variant="headline3"
-                        opacity={0.7}
-                    >
+                    </View>
+                </View>
+                <View className="my-4">
+                    <Text className="text-xl opacity-70 m-4">
                         Items
                     </Text>
                     {route.params.order.order_items.map((o) => (
-                        <Box
-                            key={o.product.id}
-                            marginHorizontal="m"
-                            borderRadius="m"
-                            overflow="hidden"
-                            flexDirection="row"
-                            marginVertical="s"
-                            bg='white'
+                        <View key={o.product.id}
+                            className="flex-row bg-primary-light overflow-hidden m-4 rounded-xl"
                         >
                             <TouchableOpacity
                                 onPress={() =>
@@ -132,91 +68,64 @@ const OrderDetailScreen: React.FC<OrderDetailScreenProps> = ({
                                     })
                                 }
                             >
-                                <SharedElement id={`image-${o.product.id}`}>
+                                {/*<SharedElement id={`image-${o.product.id}`}>*/}
                                     <Image
                                         style={{ width: 80, height: 80 }}
                                         resizeMode="cover"
-                                        source={{
-                                            uri: o.product.thumbnail!,
-                                        }}
+                                        source={{uri: o.product.thumbnail! }}
                                     />
-                                </SharedElement>
+
                             </TouchableOpacity>
-                            <Box paddingHorizontal="m" width={width * 0.7} paddingVertical='s'>
-                                <Text marginBottom="s" variant="body2">
-                                    {o.product.display_name}
-                                </Text>
-                                <Box
-                                    flexDirection="row"
-                                    alignItems="center"
-                                    justifyContent="space-between"
-                                >
-                                    <Box
-                                        flexDirection="row"
-                                        alignItems="center"
-                                    >
-                                        <Text opacity={0.5}>{`Color: `}</Text>
-                                        <Text>{o.color}</Text>
-                                    </Box>
-                                    <Box
-                                        flexDirection="row"
-                                        alignItems="center"
-                                    >
-                                        <Text opacity={0.5}>{`Size: `}</Text>
+                            <View className="px-2">
+                                <View className="w-4/5">
+                                    <Text className="font-bold">
+                                        {o.product.display_name}
+                                    </Text>
+                                </View>
+                                <View className="between-x">
+                                    <View className="flex-row">
+                                        <Text className="opacity-50">颜色: </Text>
+                                        <Text style={{color:o.color.toLowerCase()}}
+                                        >{o.color}</Text>
+                                    </View>
+                                    <View className="flex-row">
+                                        <Text className="opacity-50">尺寸: </Text>
                                         <Text>{o.size}</Text>
-                                    </Box>
-                                    <Box
-                                        flexDirection="row"
-                                        alignItems="center"
-                                    >
-                                        <Text opacity={0.5}>{`Qty: `}</Text>
+                                    </View>
+                                    <View className="flex-row">
+                                        <Text className="opacity-50">数量: </Text>
                                         <Text>{o.quantity}</Text>
-                                    </Box>
-                                </Box>
-                            </Box>
-                        </Box>
+                                    </View>
+                                </View>
+                            </View>
+                        </View>
                     ))}
-                </Box>
-                <Box marginVertical="s">
-                    <Text
-                        marginHorizontal="m"
-                        marginVertical="s"
-                        variant="headline3"
-                        opacity={0.7}
-                    >
+                </View>
+                <View className="my-4">
+                    <Text className="text-xl opacity-70 m-4">
                         Order Info
                     </Text>
-                    <Box margin='m' paddingHorizontal="m" padding='m' bg='white' borderRadius='m'>
-                        <Box
-                            flexDirection="row"
-                            alignItems="flex-start"
-                            justifyContent="space-between"
-                            marginBottom="s"
-                        >
-                            <Box flex={1}>
-                                <Text opacity={0.5}>Shipping Address: </Text>
-                            </Box>
-                            <Box flex={1}>
+                    <View className="p-2 m-4 rounded-xl bg-primary-light">
+                        <View className="flex-row justify-between mb-4">
+                            <View className="flex-1">
+                                <Text className="opacity-50">Shipping Address: </Text>
+                            </View>
+                            <View className="flex-1">
                                 <Text>{`${defaultShippingAddress?.address}, ${defaultShippingAddress?.city}, ${defaultShippingAddress?.state} ${defaultShippingAddress?.zip_code}, ${defaultShippingAddress?.country}`}</Text>
-                            </Box>
-                        </Box>
-                        <Box
-                            flexDirection="row"
-                            alignItems="flex-start"
-                            justifyContent="space-between"
-                            marginBottom="s"
-                        >
-                            <Box flex={1}>
-                                <Text opacity={0.5}>Total: </Text>
-                            </Box>
-                            <Box flex={1}>
-                                <Text>{`${route.params.order.total_amount} DT`}</Text>
-                            </Box>
-                        </Box>
-                    </Box>
-                </Box>
+                            </View>
+                        </View>
+                        <View className="between-x mb-4">
+                            <View className="flex-1">
+                                <Text className="opacity-50">Total: </Text>
+                            </View>
+                            <View className="flex-1">
+                                <Text>￥{route.params.order.total_amount}</Text>
+                            </View>
+                        </View>
+                    </View>
+                </View>
             </ScrollView>
-        </Layout>
+        </View>
     );
 };
 

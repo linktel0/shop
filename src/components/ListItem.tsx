@@ -1,51 +1,32 @@
 import React, { ReactNode } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet,View, Text } from "react-native";
 
-import { BoxProps } from "@shopify/restyle";
-import { Box, Text } from "../utils/restyle";
-import { Theme } from "../utils/theme";
 
-interface ListItemProps extends BoxProps<Theme> {
+interface ListItemProps {
     left_icon?: ReactNode;
     right_icon?: ReactNode;
     title: string;
     description: string;
 }
 
-const ListItem: React.FC<ListItemProps> = ({
+const ListItem = ({
     title,
     description,
     left_icon,
     right_icon,
-    ...rest
-}) => {
+}:ListItemProps) => {
     return (
-        <Box
-            bg="white"
-            padding="m"
-            flexDirection="row"
-            justifyContent="space-between"
-            alignItems="center"
-            marginVertical='s'
-            borderRadius='m'
-            {...rest}
-        >
-            <Box flexDirection="row" alignItems="center">
+        <View className="between-x rounded-xl my-4 p-2 bg-primary-light">
+            <View className="center-x">
                 {left_icon && left_icon}
-                <Box justifyContent="center" marginHorizontal='m'>
-                    <Text variant="body2"> {title} </Text>
-                    <Text variant="description" opacity={.7}> {description} </Text>
-                </Box>
-            </Box>
+                <View className="justify-center mx-4">
+                    <Text className="font-bold"> {title} </Text>
+                    <Text className="opacity-70"> {description} </Text>
+                </View>
+            </View>
             {right_icon && right_icon}
-        </Box>
+        </View>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-});
 
 export default ListItem;

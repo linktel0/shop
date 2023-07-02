@@ -1,53 +1,70 @@
 import React from "react";
-import {View,Text} from "react-native";
-import { Product } from "../../redux/data_types";
-import { SharedElement } from "react-navigation-shared-element";
+import {View,Text,Dimensions} from "react-native";
+import { TProduct } from "../../redux/data_types";
+import * as product  from '../../redux/product';
 import { Card ,Avatar} from "react-native-paper";
+import Animated, {
+    Extrapolate,
+    useAnimatedScrollHandler,
+    useAnimatedStyle,
+    useSharedValue,
+    withSpring,
+    useDerivedValue,
+    interpolate,
+    interpolateColor,
+} from "react-native-reanimated";
+import { useAppSelector } from "../../redux/hooks";
+import { useNavigation } from "@react-navigation/core";
 
+const { width} = Dimensions.get("screen");
 
 interface HomeProductCardProps {
-    product: Product;
-    product_width: number;
-    in_favourite?: boolean;
-    in_bag?: boolean
-    onImagePress(): void;
-    onAddToFavouritePress(): void
+    id: number;
 }
 
 const HomeProductCard = ({
-    product,
-    product_width,
-    in_bag,
-    in_favourite,
-    onImagePress,
-    onAddToFavouritePress,
+    id,
 }:HomeProductCardProps) => {
+    const navigation = useNavigation<any>();
+    const item = useAppSelector((state) => product.selectById(state.product.products,id))
+
     return (
-        <View className="bg-primary rounded-2xl mr-8"
-            style={{width:product_width}}
+        item
+        ?<View className="bg-primary rounded-2xl mr-8"
+            style={{width:width*0.5}}       
         >
+            <Animated.View>
+                {/*</View>sharedTransitionTag={`container-${product.id}`}*/}
+                {/* sharedTransitionTag={`image-${product.id}`} */}
+                <Animated.Image
+                    resizeMode="cover"
+                    source={{uri: item.thumbnail!}}
+                />
+            </Animated.View>
+
             <View className="ml-2">
-                <Card
-                    onPress={onImagePress}
+                <Card 
+                    //onPress={navigation.navigate("Shop_Product_Detail",{item: item,})}
                 >        
-                    <Card.Cover source={{ uri: product.thumbnail! }} />
+                    <Card.Cover source={{ uri: item.thumbnail! }} />
                     <Text className="p-2 text-xs font-bold h-20">
-                        {product.name}
+                        {item.name}
                     </Text>
                 </Card>
                 <View className="between-x m-1">
                     <Text className="text-primary-light">
-                        ￥{`${product.price}`}
+                        ￥{item.price}
                     </Text>
                     <View className="flex-row">
-                        {in_favourite &&<Avatar.Icon className="bg-primary"
+                        {/*in_favorite &&<Avatar.Icon className="bg-primary"
                             size={32} icon="heart" color="white"/> } 
                         {in_bag && <Avatar.Icon className="bg-primary"
-                            size={32} icon="shopping-outline" color="white"/> }       
+    size={32} icon="shopping-outline" color="white"/> */}       
                     </View>
                 </View>
-           </View>
+           </View> 
         </View>
+        :<View></View>
     );
 };
 

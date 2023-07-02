@@ -6,7 +6,7 @@ import Button from "../components/forms/form_elements/Button";
 import {Avatar} from "react-native-paper";
 const wx_logo = require('../../assets/wx_logo.png');
 const alipay = require('../../assets/alipay.png')
-import * as aliSDK from '../../packages/rn-onepass-alibaba';
+//import * as aliSDK from '../../packages/rn-onepass-alibaba';
 
 export const LoginAliScreen = ({
     navigation,

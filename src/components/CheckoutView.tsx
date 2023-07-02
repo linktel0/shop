@@ -1,8 +1,5 @@
 import React from "react";
-import { Dimensions, Image } from "react-native";
-
-import { BoxProps } from "@shopify/restyle";
-import { Theme } from "../utils/theme";
+import { Dimensions, View,Text } from "react-native";
 import Animated, {
     Extrapolate,
     interpolate,
@@ -10,7 +7,6 @@ import Animated, {
     useAnimatedStyle,
     withSpring,
 } from "react-native-reanimated";
-import { Box, Text } from "../utils/restyle";
 import {
     PanGestureHandler,
     PanGestureHandlerGestureEvent,
@@ -22,41 +18,30 @@ import Constants from "expo-constants";
 import { snapPoint } from "react-native-redash";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import ShippingAddressCard from "./cards/ShippingAddressCard";
-import Button from "./forms/form_elements/Button";
-import { BagItem, emptyBag } from "../redux/bag/bagSlice";
-import { BagScreenNavigationProps } from "../navigation/ScreensNavigationRouteProps";
-import { SharedElement } from "react-navigation-shared-element";
-import { addOrder } from "../redux/orders/orderSlice";
+import { BagItem, emptyBag } from "../redux/bag";
+import { addOrder } from "../redux/order/orderSlice";
 import { OrderStatus } from "../redux/data_types";
+import { useNavigation } from "@react-navigation/core";
 
-interface CheckoutViewProps extends BoxProps<Theme> {
+interface CheckoutViewProps {
     translateY: Animated.SharedValue<number>;
     headerTranslateY: Animated.SharedValue<number>;
-    width: number;
-    height: number;
     headerHeight: number;
     total: number;
     bagItems: BagItem[];
-    navigation: BagScreenNavigationProps;
 }
 
-const AnimatedBox = Animated.createAnimatedComponent(Box);
+const { width, height } = Dimensions.get('screen')
 
-// const { width, height } = Dimensions.get('screen')
-
-const CheckoutView: React.FC<CheckoutViewProps> = ({
+const CheckoutView = ({
     translateY,
     headerTranslateY,
     headerHeight,
-    width,
-    height,
     total,
     bagItems,
-    navigation,
-    ...rest
-}) => {
+}:CheckoutViewProps) => {
     const dispatch = useAppDispatch()
-
+    const navigation = useNavigation<any>();
     const defaultshippingAddress = useAppSelector(
         (state) => state.user.current_user?.shipping_addresses
     )?.find((add) => add.is_default);
@@ -96,32 +81,23 @@ const CheckoutView: React.FC<CheckoutViewProps> = ({
     });
 
     return (
-        <AnimatedBox
-            position="absolute"
-            zIndex={9999999999999}
-            bg="white"
-            width={width}
-            height={height}
-            style={[styles]}
-            {...rest}
+        <Animated.View className="bg-primary-light absolute z-10 w-full"
+            style={[{height:height},styles]}
         >
+
             <PanGestureHandler onGestureEvent={gestureHandler}>
-                <AnimatedBox
-                    bg="gray"
-                    width={100}
-                    height={10}
-                    borderRadius="m"
-                    position="absolute"
-                    top={Constants.statusBarHeight + 10}
-                    left={width / 2 - 50}
-                />
+                <Animated.View className="w-full flex-row justify-end pr-4"
+                    style={{top:Constants.statusBarHeight + 10}}
+                >
+                    <View className="bg-secondary w-[30] h-[30] rounded-full"/>
+                </Animated.View>
             </PanGestureHandler>
-            <ScrollView
-                style={{ flex: 1, marginTop: Constants.statusBarHeight + 30, marginBottom: Constants.statusBarHeight }}
-            >
-                <Box marginVertical="m">
-                    <Text paddingHorizontal="m" variant="body2" opacity={0.5}>
-                        Shipping Address
+
+           <ScrollView showsVerticalScrollIndicator ={false}
+                className="flex-1 mt-20 mb-16 mx-4">
+                <View >
+                    <Text className="txet-base opacity-80">
+                        收货地址
                     </Text>
                     {defaultshippingAddress && (
                         <ShippingAddressCard
@@ -133,20 +109,15 @@ const CheckoutView: React.FC<CheckoutViewProps> = ({
                             onEditPress={() => {}}
                         />
                     )}
-                </Box>
-                <Box marginVertical="m">
-                    <Text paddingHorizontal="m" variant="body2" opacity={0.5}>
-                        Items
+                </View>
+                <View>
+                    <Text className="txet-base my-2 opacity-80">
+                        商 品
                     </Text>
-                    <Box marginVertical="m">
+                    <View className="my-4">
                         {bagItems.map((b) => (
-                            <Box
-                                key={b.product.id}
-                                marginHorizontal="m"
-                                borderRadius="m"
-                                overflow="hidden"
-                                flexDirection="row"
-                                marginVertical="s"
+                            <View key={b.product.id}
+                                className="flex-row rounded-xl overflow-hidden pb-4"
                             >
                                 <TouchableOpacity
                                     onPress={() =>
@@ -156,102 +127,57 @@ const CheckoutView: React.FC<CheckoutViewProps> = ({
                                         )
                                     }
                                 >
-                                    <SharedElement id={`image-${b.product.id}`}>
-                                        <Image
-                                            style={{ width: 80, height: 80 }}
-                                            resizeMode="cover"
-                                            source={{
-                                                uri: b.product.thumbnail!,
-                                            }}
-                                        />
-                                    </SharedElement>
+                                    <Animated.Image
+                                        style={{ width: 80, height: 80 }}
+                                        resizeMode="cover"
+                                        source={{uri: b.product.thumbnail!}}
+                                    />
                                 </TouchableOpacity>
-                                <Box paddingHorizontal="m" width={width * 0.7}>
-                                    <Text marginBottom='s' variant="body2">
+                                <View className="w-4/5 px-2">
+                                    <Text className="font-bold">
                                         {b.product.display_name}
                                     </Text>
-                                    <Box
-                                        flexDirection='row'
-                                        alignItems='center'
-                                        justifyContent='space-between'
-                                    >
-                                        <Box
-                                            flexDirection='row'
-                                            alignItems='center'
-                                        >
-                                            <Text opacity={.5}>{`Color: `}</Text>
-                                            <Text>{b.color}</Text>
-                                        </Box>
-                                        <Box
-                                            flexDirection='row'
-                                            alignItems='center'
-                                        >
-                                            <Text opacity={.5}>{`Size: `}</Text>
+                                    <View className="between-x">
+                                        <View className="flex-row">
+                                            <Text className="opacity-50">颜色: </Text>
+                                            <Text style={{color:b.color.toLowerCase()}}
+                                            >{b.color}</Text>
+                                        </View>
+                                        <View className="flex-row">
+                                            <Text className="opacity-50">尺寸: </Text>
                                             <Text>{b.size}</Text>
-                                        </Box>
-                                        <Box
-                                            flexDirection='row'
-                                            alignItems='center'
-                                        >
-                                            <Text opacity={.5}>{`Qty: `}</Text>
+                                        </View>
+                                        <View className="flex-row">
+                                            <Text className="opacity-50">数量: </Text>
                                             <Text>{b.quantity}</Text>
-                                        </Box>
-                                    </Box>
-                                </Box>
-                            </Box>
+                                        </View>
+                                    </View>
+                                </View>
+                            </View>
                         ))}
-                    </Box>
-                </Box>
-                <Box marginVertical="m" bg="white">
-                    <Text
-                        marginBottom="m"
-                        paddingHorizontal="m"
-                        variant="body2"
-                        opacity={0.5}
-                    >
-                        Order Info
+                    </View>
+                </View>
+                {/*<View className="bg-primary-light">
+                    <Text className="text-base opacity-80">                    
+                        订单信息
                     </Text>
-                    <Box marginHorizontal="m" elevation={2}>
-                        <Box
-                            flexDirection="row"
-                            alignItems="center"
-                            justifyContent="space-between"
-                            paddingHorizontal="m"
-                        >
-                            <Text variant="body" opacity={0.7}>
-                                Order
-                            </Text>
-                            <Text variant="body">{`${total} DT`}</Text>
-                        </Box>
-                        <Box
-                            flexDirection="row"
-                            alignItems="center"
-                            justifyContent="space-between"
-                            paddingHorizontal="m"
-                        >
-                            <Text variant="body" opacity={0.7}>
-                                Shipping fee
-                            </Text>
-                            <Text variant="body">{`${7} DT`}</Text>
-                        </Box>
-                        <Box
-                            marginTop="s"
-                            flexDirection="row"
-                            alignItems="center"
-                            justifyContent="space-between"
-                            paddingHorizontal="m"
-                        >
-                            <Text variant="body" opacity={0.7}>
-                                Summary
-                            </Text>
-                            <Text variant="body">{`${+(7 + total).toFixed(2)} DT`}</Text>
-                        </Box>
-                    </Box>
-                </Box>
-                <Box marginVertical="m" paddingHorizontal="m">
-                    <Button
-                        title="SUBMIT ORDER"
-                        variant="PRIMARY"
+                    <View className="mx-4">
+                        <View className="between-x mt-4">
+                            <Text className="opacity-70">订 单</Text>
+                            <Text className="opacity-70">￥{total}</Text>
+                        </View>
+                        <View className="between-x">
+                            <Text className="opacity-70">运 费</Text>
+                            <Text className="opacity-70">￥{7}</Text>
+                        </View>
+                        <View className="between-x">
+                            <Text className="opacity-70">总 额</Text>
+                            <Text className="opacity-70">￥{(7 + total).toFixed(2)} </Text>
+                        </View>
+                    </View>
+                </View>
+                <View className="py-4">
+                    <TouchableOpacity className="bg-primary/70 rounded-full items-center p-2"
                         onPress={() => {
                             dispatch(emptyBag())
                             dispatch(addOrder({
@@ -266,10 +192,12 @@ const CheckoutView: React.FC<CheckoutViewProps> = ({
                             headerTranslateY.value= 0
                             translateY.value = height
                         }}
-                    />
-                </Box>
+                    >
+                        <Text className="text-primary-light text-lg">确  认</Text>
+                    </TouchableOpacity>
+                </View>*/}
             </ScrollView>
-        </AnimatedBox>
+        </Animated.View>
     );
 };
 

@@ -1,61 +1,48 @@
-import React, { ReactNode } from "react";
-import { Image, ImageSourcePropType, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import { View,Text, Dimensions } from "react-native";
+import * as category from "../../redux/category";
+import { useAppSelector } from "../../redux/hooks";
+import Animated from "react-native-reanimated";
+import { useNavigation } from "@react-navigation/native";
+import { IconButton } from 'react-native-paper';
 
-import { BoxProps } from "@shopify/restyle";
-import { Box, Text } from "../../utils/restyle";
-import { Theme } from "../../utils/theme";
-import { SharedElement } from "react-navigation-shared-element";
-
-interface CategoryCardProps extends BoxProps<Theme> {
-    width: number;
-    height: number;
-    image: ImageSourcePropType;
-    title: string;
-    icon: ReactNode;
+interface CategoryCardProps  {
+    id:number
 }
 
-const CategoryCard: React.FC<CategoryCardProps> = ({
-    width,
-    height,
-    image,
-    title,
-    icon,
-    ...rest
-}) => {
+const { width} = Dimensions.get("screen");
+
+const CategoryCard = ({
+    id
+}:CategoryCardProps) => {
+    const navigation = useNavigation<any>();
+    const item = useAppSelector((state) => category.selectById(state.category.categories,id));
+ 
     return (
-        <Box
-            
-            width={width}
-            height={height}
-            borderRadius="s"
-            overflow="hidden"
-            {...rest}
+        item
+        ?<Animated.View key={id}
+            className="center-x mb-4"
         >
-            <SharedElement id={`category-${title}`}>
-            <Image
-                style={{height, width}}
-                width={width}
-                height={height}
+            <Animated.Image
                 resizeMode="cover"
-                source={image}
+                source={{uri: item.image}}
+                style={{ width:width - 16 * 2, height: 200}}
             />
-            </SharedElement>
-            <Box position="absolute" bottom={10} left={10}>
-                <Text variant="headline" color="white">
-                    {title}
-                </Text>
-            </Box>
-            <Box position="absolute" bottom={10} right={10}>
-                {icon}
-            </Box>
-        </Box>
-    );
+            <Text className="absolute left-8 bottom-3 text-primary-light text-3xl font-bold">
+                {item.display_name}
+            </Text>
+
+                <IconButton size={32} icon="arrow-right-thick" iconColor="white"
+                    className="absolute right-5 bottom-1 bg-primary-light/0"
+                    onPress={() =>
+                        navigation.navigate("Shop_Category", {
+                            category: item,
+                    })} 
+                />
+
+        </Animated.View>
+        :<View/>
+    )
 };
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-});
-
-export default CategoryCard;
+export default React.memo(CategoryCard);

@@ -1,26 +1,21 @@
-import { BoxProps } from "@shopify/restyle";
 import React, { useState } from "react";
-import { ScrollView, StyleSheet } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { Box } from "../utils/restyle";
-import { Theme } from "../utils/theme";
+import { ScrollView, View,TouchableOpacity} from "react-native";
 
-interface SelectableColorsProps extends BoxProps<Theme> {
+interface SelectableColorsProps {
     items: string[] | [];
     value: string;
     onChange(value: string): void;
 }
 
-const SelectableColors: React.FC<SelectableColorsProps> = ({
+const SelectableColors = ({
     items = [],
     value,
     onChange,
-    ...rest
-}) => {
+}:SelectableColorsProps) => {
     const [selected, setSelected] = useState(value);
 
     return (
-        <Box {...rest}>
+        <View>
             <ScrollView
                 style={{ flex: 1 }}
                 horizontal
@@ -28,35 +23,20 @@ const SelectableColors: React.FC<SelectableColorsProps> = ({
             >
                 {items.length > 0 &&
                     items.map((it, index) => (
-                        <Box
-                            key={index}
-                            marginHorizontal="s"
-                            justifyContent="center"
-                            alignItems="center"
-                            width={30}
-                            height={30}
-                            borderWidth={selected === it ? 1 : 0}
-                            style={{ borderRadius: selected === it ? 15 : 0 }}
+                        <View  key={index} className={`center-x w-[30] h-[30] mr-2 
+                                           ${selected === it?'border rounded-full':''} `} 
                         >
-                            <TouchableOpacity
+                            <TouchableOpacity className="h-[25] w-[25] rounded-full"
+                                style={{backgroundColor: it.toLowerCase()}}
                                 onPress={() => {
                                     setSelected(it);
                                     onChange(it);
                                 }}
-                            >
-                                <Box
-                                    width={25}
-                                    height={25}
-                                    style={{
-                                        borderRadius: 12,
-                                        backgroundColor: it.toLowerCase(),
-                                    }}
-                                ></Box>
-                            </TouchableOpacity>
-                        </Box>
+                            />
+                        </View>
                     ))}
             </ScrollView>
-        </Box>
+        </View>
     );
 };
 

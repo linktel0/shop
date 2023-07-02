@@ -13,8 +13,10 @@ const AppStack = () => {
   return (
    <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name='AuthenticationScreen' component={screens.AuthenticationScreen} />
-        <Stack.Screen name='OnBoarding' component={screens.OnBoardingScreen} />
-        {/*<Stack.Screen name='Auth' component={AuthStack} />*/}
+        <Stack.Screen name='Advertise' component={screens.AdvertiseScreen} />
+        {/*<Stack.Screen name='Auth' component={AuthStack} />
+        
+        */}
         <Stack.Screen name='Main' component={MainStack} /> 
         </Stack.Navigator>
   );

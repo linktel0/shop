@@ -5,6 +5,7 @@ import Input from "../components/forms/form_elements/Input";
 import Button from "../components/forms/form_elements/Button";
 import {Avatar} from "react-native-paper";
 //import * as wechat  from '../../packages/react-native-wechat-lib';
+//import * as wechat  from 'react-native-wechat-lib';
 
 export const LoginWechatScreen = ({
     navigation,
@@ -17,7 +18,7 @@ export const LoginWechatScreen = ({
     useEffect(() => {
         setIsValid(true);
     }, []);
-/*
+{/*
     const onRegisterApp = () => {
         console.log('hello');
         wechat.registerApp('wx7973caefdffba1b8', 'universalLink').then((res) => {
@@ -58,7 +59,7 @@ export const LoginWechatScreen = ({
     const onPress = () => {
         console.log('hello');
     }
-*/
+*/}
     return (
         <View className="h-full w-full justify-center items-center">
             <Text >Call wechat SDK demo</Text>

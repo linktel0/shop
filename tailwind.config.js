@@ -18,14 +18,17 @@ module.exports = {
         dark: '#475569',
       },
       secondary: {
-        light: '#fde68a',
-        DEFAULT: '#d400bc',
-        dark: '#92400e',
+        DEFAULT: '#9B9B9B',
+        dark: '#c4c4c4c4',
+        light: '#dadadada',
       },
     },
     extend: {
       colors: {
-        error: '#DB3022',
+        error: "#F01F0E",
+        success: "#2AA952",
+        darkColor: "#2A2C36",
+
         red: {
           DEFAULT: '#DB3022',
           darker: '#bf1c0a',
@@ -33,8 +36,8 @@ module.exports = {
         },
         gray: {
           DEFAULT: '#9B9B9B',
-          darker: '#c4c4c4c4',
-          lighter: '#fafafafa',
+          darker: '#c4c4c4',
+          lighter: '#e5e7eb',
         },
         white:'#fafafafa',
       },
@@ -45,6 +48,11 @@ module.exports = {
       const layouts = {
         '.between-x': {
           flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        },
+        '.between-y': {
+          flexDirection: 'column',
           justifyContent: 'space-between',
           alignItems: 'center',
         },

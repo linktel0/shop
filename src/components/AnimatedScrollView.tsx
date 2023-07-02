@@ -1,5 +1,4 @@
 import React from "react";
-import { Product } from "../redux/data_types";
 import {
     Extrapolate,
     interpolate,
@@ -10,27 +9,18 @@ import {
     withSpring,
 } from "react-native-reanimated";
 import Animated from "react-native-reanimated";
-import { SharedElement } from "react-navigation-shared-element";
-import { Card ,Avatar} from "react-native-paper";
-import { View,Text } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { View,Dimensions } from "react-native";
+import ProductItem from "./cards/ProductItem";
 
 interface AnimatedScrollViewProps {
-    data: Product[];
-    itemWidth: number;
-    itemHeight?: number;
-    products_in_bag: number[]
-    products_in_favourite: number[]
+    ids: number[];
 }
 
+const { width} = Dimensions.get("screen");
+const itemWidth = width*0.5
 const AnimatedScrollView = ({
-    data,
-    itemHeight,
-    itemWidth,
-    products_in_bag,
-    products_in_favourite,   
+    ids, 
 }:AnimatedScrollViewProps) => {
-    const navigation = useNavigation<any>();
     const translationX = useSharedValue(0);
 
     const scrollHandler = useAnimatedScrollHandler((event) => {
@@ -47,7 +37,7 @@ const AnimatedScrollView = ({
                 snapToInterval={itemWidth + 16 * 2}
                 decelerationRate="fast"
             >
-                {data.map((item, index) => {
+                {ids.map((id, index) => {
                     const inputRange = [
                         (itemWidth + 16 * 2) * (index - 2),
                         (itemWidth + 16 * 2) * index,
@@ -93,35 +83,14 @@ const AnimatedScrollView = ({
                     }));
                     return (
                         <Animated.View 
-                            key={item.id}
+                            key={index}
                             style={animatedStyles}
                         >
-                           <View className="bg-primary rounded-2xl mr-8"
-                                style={{width:itemWidth}}
-                            >
-                                <View className="ml-2">
-                                    <Card
-                                        onPress={() =>
-                                        navigation.navigate("Shop_Product_Detail", {item: item,})}
-                                    >        
-                                        <Card.Cover source={{ uri: item.thumbnail! }} />
-                                        <Text className="p-2 text-xs font-bold h-20">
-                                            {item.name}
-                                        </Text>
-                                    </Card>
-                                    <View className="between-x m-1">
-                                        <Text className="text-primary-light">
-                                            ￥{`${item.price}`}
-                                        </Text>
-                                        <View className="flex-row">
-                                            {products_in_favourite.includes(item.id) &&<Avatar.Icon className="bg-primary"
-                                                size={32} icon="heart" color="white"/> } 
-                                            {products_in_bag.includes(item.id) && <Avatar.Icon className="bg-primary"
-                                                size={32} icon="shopping-outline" color="white"/> }       
-                                        </View>
-                                    </View>
-                            </View>
-                            </View>
+                           <ProductItem 
+                                id={id} 
+                                itemWidth={width*0.5}
+                                itemHeight={width*0.55}
+                            />
                         </Animated.View>
                     );
                 })}

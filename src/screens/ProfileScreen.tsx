@@ -1,168 +1,130 @@
-import { Entypo, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { useTheme } from "@shopify/restyle";
 import React from "react";
-import { Dimensions, ScrollView } from "react-native";
-
-import Layout from "../components/Layout";
-import ListItem from "../components/ListItem";
+import { View,Text } from "react-native";
 import BottomTab from "../components/navigation/BottomTab";
-
-import {
-    ProfileScreenNavigationProps,
-    ProfileScreenRouteProps,
-} from "../navigation/ScreensNavigationRouteProps";
-import { Box, Text } from "../utils/restyle";
-import { Theme } from "../utils/theme";
-
-
-import { TouchableOpacity } from "react-native-gesture-handler";
-import ProfileHeader from "../components/navigation/ProfileHeader";
+import {ProfileScreenProps} from "../navigation/ScreensNavigationRouteProps";
 import { useAppSelector } from "../redux/hooks";
-interface ProfileScreenProps {
-    navigation: ProfileScreenNavigationProps;
-    route: ProfileScreenRouteProps;
-}
-const { width, height } = Dimensions.get("screen");
+import { Avatar, IconButton, List } from "react-native-paper";
+import { cos } from "react-native-reanimated";
 
-const HEADER_HEIGHT = height * 0.15;
-const AVATAR_SIZE = 80;
+export const ProfileScreen = ({ navigation, route }:ProfileScreenProps) => {
 
-const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation, route }) => {
-    const theme = useTheme<Theme>();
-    const shippingAddressCount = useAppSelector(state => state.user.current_user?.shipping_addresses)?.length
-    const ordersCount = useAppSelector(state => state.orders.orderItems).length
+    const userItem = useAppSelector((state)=>state.user.current_user)
+    const shippingAddressCount = userItem?.shipping_addresses?.length
+    const ordersCount = userItem?.orders.length
     
     return (
-        <Layout no_padding>
-            <ProfileHeader
-                zIndex={555555}
-                header_width={width}
-                header_height={HEADER_HEIGHT}
-                avatar_size={AVATAR_SIZE}
-                avatar_source={{
-                    uri: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-                }}
-                right_icon={
-                    <TouchableOpacity onPress={() => navigation.navigate('Auth', {screen: 'Login'})}>
-                        <Ionicons
-                            name="exit-outline"
-                            size={30}
-                            color={theme.colors.white}
-                        />
-                    </TouchableOpacity>
-                }
-            />
-            <BottomTab
-                elevation={5}
-                route_name={route.name}
-                position="absolute"
-                bottom={0}
-            />
-            <ScrollView
-                style={{
-                    flex: 1,
-                    marginBottom: height * 0.1,
+        <View className="w-full h-full">
+            <View className="w-full between-x bg-primary h-36 rounded-b-[40] pl-4"> 
+                <Text className="text-white text-2xl">
+                    Profile
+                </Text>    
+                <IconButton
+                    icon="home-export-outline"
+                    iconColor={'white'}
+                    size={40}
+                    onPress={() => navigation.navigate('Auth', {screen: 'Login'})}
+                />
+            </View>
 
-                    paddingHorizontal: theme.spacing.m,
-                }}
-            >
-                <Box
-                    style={{
-                        paddingTop:
-                            HEADER_HEIGHT + AVATAR_SIZE / 2 + theme.spacing.m,
-                        marginBottom: theme.spacing.m
-                    }}
+            <View className="w-full center-x z-10 -mt-10" >
+                <Avatar.Image 
+                    size={80} 
+                    source={{
+                        uri: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+                    }} />   
+            </View>    
+            <BottomTab route_name={route.name}/>
+            
+            <View className="m-6">                
+                <View className="my-4 rounded-xl between-x bg-primary-light px-4 py-2"
+                    style={{elevation:5,shadowColor:'black',shadowRadius:20,
+                    shadowOpacity:0.5,shadowOffset:{width:0,height:10}}} 
                 >
-                    <Box alignItems="center" justifyContent="center" marginBottom='m'>
-                        <Box
-                            width={width * 0.8}
-                            borderRadius="m"
-                            padding="m"
-                            bg="white"
-                            flexDirection="row"
-                            justifyContent="space-between"
-                        >
-                            <Box>
-                                <Text variant="body2">Name</Text>
-                                <Text variant="description" opacity={0.4}>
-                                    Jack
-                                </Text>
-                            </Box>
-                            <Box>
-                                <Text variant="body2">Email</Text>
-                                <Text variant="description" opacity={0.4}>
-                                    jack@jack.com
-                                </Text>
-                            </Box>
-                        </Box>
-                    </Box>
-                    <ListItem
-                        title="My Orders"
-                        description={ordersCount === 0 ? "Don't have any" : `Already have ${ordersCount}`}
-                        left_icon={
-                            <Entypo
-                                name="shopping-bag"
-                                size={30}
-                                color={theme.colors.primary}
-                            />
-                        }
-                        right_icon={
-                            <TouchableOpacity onPress={() => navigation.navigate('Profile_Orders')}> 
-                                <MaterialIcons
-                                    name="keyboard-arrow-right"
-                                    size={30}
-                                    color={theme.colors.primary}
-                                />
-                            </TouchableOpacity>
-                        }
-                    />
-                    <ListItem
-                        title="Shipping Addresses"
-                        description={shippingAddressCount === 0 ? "Don't have any" : `Already have ${shippingAddressCount}`}
-                        left_icon={
-                            <Entypo
-                                name="address"
-                                size={30}
-                                color={theme.colors.primary}
-                            />
-                        }
-                        right_icon={
-                            <TouchableOpacity onPress={() => navigation.navigate('Profile_ShippingAddresses')}>
-                                <MaterialIcons
-                                    name="keyboard-arrow-right"
-                                    size={30}
-                                    color={theme.colors.primary}
-                                />
-                            </TouchableOpacity>
-                        }
-                    />
-               
-                    <ListItem
-                        title="Settings"
-                        description="Password, notifications ..."
-                        left_icon={
-                            <MaterialIcons
-                                name="settings"
-                                size={30}
-                                color={theme.colors.primary}
-                            />
-                        }
-                        right_icon={
-                            <TouchableOpacity onPress={() => navigation.navigate('Profile_Settings')}>
-                                <MaterialIcons
-                                    name="keyboard-arrow-right"
-                                    size={30}
-                                    color={theme.colors.primary}
-                                />
-                            </TouchableOpacity>
-                        }
-                    />
-                    
+                    <View>
+                        <Text className="font-bold">Name</Text>
+                        <Text className="opacity-40">
+                            Jack
+                        </Text>
+                    </View>
+                    <View>
+                        <Text className="font-bold">Email</Text>
+                        <Text className="opacity-40">
+                            jack@jack.com
+                        </Text>
+                    </View>
+                </View>
+                <View className="my-3 rounded-xl between-x bg-primary-light pl-3 py-2"
+                    style={{elevation:5,shadowColor:'black',shadowRadius:20,
+                    shadowOpacity:0.5,shadowOffset:{width:0,height:10}}} 
+                >
+                    <View className="flex-row">
+                        <Avatar.Icon className="bg-primary-light"
+                            color={'red'}
+                            size={48} icon="shopping" />
+                        <View className="flex-col pl-2">
+                            <Text className="font-bold">My Orders</Text>
+                            <Text>{ordersCount === 0 ? "Don't have any" : `Already have ${ordersCount}`}</Text>
+                        </View>
+                    </View>
+                    <IconButton onPress={() => navigation.navigate('Profile_Orders')} 
+                        icon="chevron-right" iconColor="red" size={32}/>
+                </View>
 
-                </Box>
-            </ScrollView>
-        </Layout>
+                <View className="my-3 rounded-xl between-x bg-primary-light pl-3 py-2"
+                    style={{elevation:5,shadowColor:'black',shadowRadius:20,
+                    shadowOpacity:0.5,shadowOffset:{width:0,height:10}}} 
+                >
+                    <View className="flex-row">
+                        <Avatar.Icon className="bg-primary-light"
+                            color={'red'}
+                            size={48} icon="home" />
+                        <View className="flex-col pl-2">
+                            <Text className="font-bold">Shipping Addresses</Text>
+                            <Text>{shippingAddressCount === 0 ? "Don't have any" : `Already have ${shippingAddressCount}`}</Text>
+                        </View>
+                    </View>
+                    <IconButton icon="chevron-right" iconColor="red" size={32}
+                        onPress={() => navigation.navigate('Profile_ShippingAddresses')}
+                    />
+                </View>
+
+                <View className="my-3 rounded-xl between-x bg-primary-light pl-3 py-2"
+                    style={{elevation:5,shadowColor:'black',shadowRadius:20,
+                    shadowOpacity:0.5,shadowOffset:{width:0,height:10}}} 
+                >
+                    <View className="flex-row">
+                        <Avatar.Icon className="bg-primary-light"
+                            color={'red'}
+                            size={48} icon="chat-processing-outline" />
+                        <View className="flex-col pl-2">
+                            <Text className="font-bold">Service</Text>
+                            <Text>Connact to service center</Text>
+                        </View>
+                    </View>
+                    <IconButton icon="chevron-right" iconColor="red" size={32}
+                        onPress={() => console.log('hello')}
+                    />
+                </View>
+
+                <View className="my-3 rounded-xl between-x bg-primary-light pl-3 py-2"
+                    style={{elevation:5,shadowColor:'black',shadowRadius:20,
+                    shadowOpacity:0.5,shadowOffset:{width:0,height:10}}} 
+                >
+                    <View className="flex-row">
+                        <Avatar.Icon className="bg-primary-light"
+                            color={'red'}
+                            size={48} icon="cog" />
+                        <View className="flex-col pl-2">
+                            <Text className="font-bold">Settings</Text>
+                            <Text>Password, notifications ...</Text>
+                        </View>
+                    </View>
+                    <IconButton icon="chevron-right" iconColor="red" size={32}
+                        onPress={() => navigation.navigate('Profile_Settings')}
+                    />
+                </View>
+            </View>
+        </View>
     );
 };
 
-export default ProfileScreen;

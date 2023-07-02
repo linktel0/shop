@@ -1,64 +1,41 @@
 import React, { useState } from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import { ScrollView,View,Text,TouchableOpacity} from "react-native";
 
-import { BoxProps } from "@shopify/restyle";
-import { Box } from "../utils/restyle";
-import { Theme } from "../utils/theme";
-import Chip from "./Chip";
-import { TouchableOpacity } from "react-native-gesture-handler";
-
-interface SelectablesProps extends BoxProps<Theme> {
+interface SelectablesProps {
     items: string[] | [];
     value: string;
     onChange(value: string): void;
 }
 
-const Selectables: React.FC<SelectablesProps> = ({
+const Selectables = ({
     items = [],
     value,
     onChange,
-    ...rest
-}) => {
+}:SelectablesProps) => {
     const [selected, setSelected] = useState(value);
-
     return (
-        <Box {...rest}>
+        <View>
             <ScrollView
                 style={{ flex: 1 }}
                 horizontal
                 showsHorizontalScrollIndicator={false}
             >
                 {items.length > 0 &&
-                    items.map((it, index) => {
-                        return (
-                            <Chip
-                                marginHorizontal="s"
-                                maxWidth={150}
-                                borderWidth={selected === it ? 1 : 0}
-                                overflow="hidden"
-                                bg={selected === it ? "white" : "darkColor"}
-                                borderRadius="m"
-                                textProps={{
-                                    color: selected === it ? "black" : "white",
-                                }}
-                                key={index}
-                                name={it}
-                                onPress={() => {
-                                    setSelected(it);
-                                    onChange(it);
-                                }}
-                            />
-                        );
-                    })}
+                    items.map((it, index) => (
+                        <TouchableOpacity key={index}
+                            className={`${selected === it?'text-primary-dark border bg-primary-light'
+                                                         :'text-primary-light bg-primary-dark/80'}
+                                         rounded-2xl center-x pb-1 mr-2 my-3 px-[24]` }
+                            onPress={() => {setSelected(it); onChange(it); }}
+                        >
+                            <Text className={`${selected === it ? 'text-primary-dark' : 'text-primary-light'}`}
+                            >{it}</Text>
+                       </TouchableOpacity>
+                    ))}
             </ScrollView>
-        </Box>
+        </View>
     );
 };
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-});
-
 export default Selectables;
+

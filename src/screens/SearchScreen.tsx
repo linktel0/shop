@@ -1,10 +1,8 @@
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { useFocusEffect, useIsFocused } from "@react-navigation/core";
-import { useTheme } from "@shopify/restyle";
-import React, { createRef, useEffect, useRef, useState } from "react";
+import {  MaterialCommunityIcons } from "@expo/vector-icons";
+import React, {useEffect, useState } from "react";
 import {
+    View,Text,
     Dimensions,
-    ScrollView,
     TextInput,
     TouchableOpacity,
 } from "react-native";
@@ -12,43 +10,27 @@ import { FlatList } from "react-native-gesture-handler";
 import { useSharedValue } from "react-native-reanimated";
 import ProductCard from "../components/cards/ProductCard";
 import FilterView from "../components/FilterView";
-import Input from "../components/forms/form_elements/Input";
-import Layout from "../components/Layout";
 import BottomTab from "../components/navigation/BottomTab";
-import {
-    SearchScreenNavigationProps,
-    SearchScreenRouteProps,
-} from "../navigation/ScreensNavigationRouteProps";
+import {SearchScreenProps} from "../navigation/ScreensNavigationRouteProps";
 import { Product } from "../redux/data_types";
-import { useAppSelector } from "../redux/hooks";
-import { Box, Text } from "../utils/restyle";
-import { Theme } from "../utils/theme";
+import { useAppSelector } from "../redux/hooks";;
 import { useKeyboard } from "../utils/useKeyboardHeight";
-
 import SortView from "../components/SortView";
+import {IconButton} from 'react-native-paper'
+import { Header } from "../components/navigation/Header";
 
-import { SharedElement } from "react-navigation-shared-element";
-
-
-interface SearchScreenProps {
-    navigation: SearchScreenNavigationProps;
-    route: SearchScreenRouteProps;
-}
 
 const { width, height } = Dimensions.get("screen");
 const PRODUCT_WIDTH = width / 2;
 
-const FILTER_VIEW_HEIGHT = height * 0.5;
+const FILTER_VIEW_HEIGHT = height / 2;
 
-const SearchScreen: React.FC<SearchScreenProps> = ({ navigation, route }) => {
-    const theme = useTheme<Theme>();
+const SearchScreen = ({ navigation, route }:SearchScreenProps) => {
     //animations
     const filterTranslateY = useSharedValue(FILTER_VIEW_HEIGHT + 15);
     const sortTranslateY = useSharedValue(FILTER_VIEW_HEIGHT + 15);
     //animations
     const [keyboardHeight, keyboardVisible] = useKeyboard();
-    const inputRef = createRef<TextInput>();
-    const searchButtonRef = createRef<TouchableOpacity>();
 
     const storedProducts = useAppSelector((state) => state.products.products);
     const products_in_bag = useAppSelector(
@@ -74,7 +56,8 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation, route }) => {
     }, [route.params.search_term]);
 
     return (
-        <Layout>
+        <View className="h-full">
+            <Header title="筛选" goBack={()=>navigation.goBack()}/>
             <SortView
                 height={FILTER_VIEW_HEIGHT}
                 width={width}
@@ -85,116 +68,68 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation, route }) => {
             <FilterView
                 width={width}
                 height={FILTER_VIEW_HEIGHT}
-                onClose={() =>
-                    (filterTranslateY.value = FILTER_VIEW_HEIGHT + 15)
-                }
                 translateY={filterTranslateY}
+                onClose={() =>(filterTranslateY.value = FILTER_VIEW_HEIGHT + 15)}
                 onApply={() => (filterTranslateY.value = FILTER_VIEW_HEIGHT + 15)}
             />
-            {!keyboardVisible && (
-                <BottomTab
-                    elevation={5}
-                    route_name={route.name}
-                    position="absolute"
-                    bottom={0}
-                    zIndex={5555}
-                />
-            )}
+            {!keyboardVisible && (<BottomTab route_name={route.name} /> )}
 
             <FlatList
-                contentContainerStyle={{ marginBottom: height * 0.1, paddingHorizontal: theme.spacing.m }}
+                contentContainerStyle={{ marginBottom: height * 0.1, paddingHorizontal: 16 }}
                 ListHeaderComponent={
-                    <Box 
-                        marginVertical='m'
-                        padding='m'
-                        borderRadius='m'
-                        bg='primary'
-                        elevation={10}
-                    >
-                        <SharedElement id='search-input'>
-                        <Input
-                            inputRef={inputRef}
-                            placeholder="Search"
-                            textInputProps={{
-                                value: searchTerm,
-                                onChangeText: (v) => setSearchTerm(v),
-                            }}
-                            icon={
-                                <TouchableOpacity
-                                    ref={searchButtonRef}
-                                    onPress={() =>
-                                        setProducts((prev) =>
-                                            storedProducts.filter(
-                                                (p) =>
-                                                    p.sub_category.name.toLowerCase() ===
-                                                    searchTerm.toLowerCase()
-                                            )
-                                        )
-                                    }
-                                >
-                                    <Ionicons
-                                        name="search"
-                                        size={25}
-                                        color={theme.colors.primary}
-                                    />
-                                </TouchableOpacity>
-                            }
-                        />
-                        </SharedElement>
-                        {products.length !== 0 && (
-                            <Box
-                                paddingHorizontal="m"
-                                paddingVertical='s'
-                                flexDirection="row"
-                                justifyContent="space-between"
-                                bg="white"
-                                borderRadius="s"
+                    <View className="bg-primary rounded-xl p-5 mt-2" > 
+                        <View className="bg-primary-light between-x h-[48] p-3 pr-0 rounded-xl">
+                            <TextInput className="w-2/3"
+                                placeholder="查 询"
+                                value = {searchTerm}
+                                onChangeText = {(v) => setSearchTerm(v)}
                             >
-                                <TouchableOpacity
+                            </TextInput>
+                            <IconButton 
+                                icon="magnify"
+                                size={32}
+                                iconColor={'red'}
+                                onPress={() =>
+                                    setProducts((prev) =>
+                                        storedProducts.filter(
+                                            (p) =>
+                                                p.sub_category.name.toLowerCase() ===
+                                                searchTerm.toLowerCase().trim()
+                                        )
+                                    )
+                                }
+                            />
+                        </View>
+                        
+                        {products.length !== 0 && (
+                            <View className="between-x bg-primary-light h-[48] p-3 mt-4 rounded-xl">
+                                <TouchableOpacity className="flex-row items-center"
                                     onPress={() => (filterTranslateY.value = 0)}
                                 >
-                                    <Box
-                                        flexDirection="row"
-                                        alignItems="center"
-                                    >
-                                        <Ionicons
-                                            name="filter-sharp"
-                                            size={24}
-                                            color={theme.colors.darkColor}
-                                        />
-                                        <Text
-                                            marginLeft="s"
-                                            variant="body2"
-                                            opacity={0.7}
-                                        >
-                                            Filter
-                                        </Text>
-                                    </Box>
+                                    <MaterialCommunityIcons
+                                        name="filter-variant"
+                                        size={24}
+                                        color={'black'}
+                                    />
+                                    <Text className="ml-2 opacity-70">
+                                        类别
+                                    </Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity
+                                <TouchableOpacity className="flex-row items-center"
                                     onPress={() => (sortTranslateY.value = 0)}
                                 >
-                                    <Box
-                                        flexDirection="row"
-                                        alignItems="center"
-                                    >
-                                        <MaterialCommunityIcons
-                                            name="sort"
-                                            size={24}
-                                            color={theme.colors.darkColor}
-                                        />
-                                        <Text
-                                            marginLeft="s"
-                                            variant="body2"
-                                            opacity={0.7}
-                                        >
-                                            Sort
-                                        </Text>
-                                    </Box>
+                                    <MaterialCommunityIcons
+                                        name="sort"
+                                        size={24}
+                                        color={'black'}
+                                    />
+                                    <Text className="ml-2 opacity-70">
+                                        价格
+                                    </Text>
                                 </TouchableOpacity>
-                            </Box>
+                            </View>
                         )}
-                    </Box>
+                    </View>
                 }
                 data={products}
                 keyExtractor={(p, i) => p.id.toString()}
@@ -203,11 +138,10 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation, route }) => {
                 
                 renderItem={({ item }) => (
                     <ProductCard
-            
-                        width={PRODUCT_WIDTH - theme.spacing.m * 2}
+                        width={PRODUCT_WIDTH - 16 * 2}
                         is_in_bag={products_in_bag.includes(item.id)}
                         product={item}
-                        onAddToBagPress={() => {}}
+                        onAddToBagPress={() => {console.log('hello')}}
                         onImagePress={() =>
                             navigation.navigate("Shop_Product_Detail", {
                                 item: item,
@@ -216,7 +150,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation, route }) => {
                     />
                 )}
             />
-        </Layout>
+        </View>
     );
 };
 

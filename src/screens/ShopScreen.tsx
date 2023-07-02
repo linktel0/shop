@@ -1,97 +1,39 @@
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { useTheme } from "@shopify/restyle";
-import React, { useState } from "react";
-import { Dimensions, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
-import CategoryCard from "../components/cards/CategoryCard";
-import Layout from "../components/Layout";
+import React, { useEffect, useState } from "react";
+import { View, ScrollView } from "react-native";
 import BottomTab from "../components/navigation/BottomTab";
-import Header from "../components/navigation/Header";
-import {
-    ShopScreenRouteProps,
-    ShopScreenScreenNavigationProps,
-} from "../navigation/ScreensNavigationRouteProps";
-import { CATEGORIES } from "../redux/data";
-import { Box } from "../utils/restyle";
-import { Theme } from "../utils/theme";
+import {Header} from "../components/navigation/Header";
+import {ShopScreenProps} from "../navigation/ScreensNavigationRouteProps";
+import * as display from '../redux/display'
+import { useAppSelector } from "../redux/hooks";
+import {TDisplay } from "../redux/data_types";
+import CategoryCard from "../components/cards/CategoryCard";
 
-interface ShopScreenProps {
-    navigation: ShopScreenScreenNavigationProps;
-    route: ShopScreenRouteProps;
-}
-
-const { width, height } = Dimensions.get("screen");
-const HEADER_HEIGHT = height * .12
-
-const ShopScreen: React.FC<ShopScreenProps> = ({ navigation, route }) => {
-    const theme = useTheme<Theme>();
+const ShopScreen = ({ navigation, route }:ShopScreenProps) => {
+    const [categories,setCategories] = useState<TDisplay>();
+    const displays = useAppSelector((state) => display.selectAll(state.display.displays));
+    useEffect(()=>{
+        displays.forEach((item)=>{
+            if (item.display_type==='category'){
+                setCategories(item)
+            }
+        })        
+    },[])
 
     return (
-        <Layout>
-            <Header
-                height={HEADER_HEIGHT}
-                elevation={2}
-                title="Categories"
-                paddingHorizontal='m'
-                position="absolute"
-                top={0}
-                right_icon={
-                    <TouchableOpacity onPress={() => navigation.navigate('Shop_Search', {search_term: null})}>
-                        <MaterialIcons
-                            name="search"
-                            size={30}
-                            color={theme.colors.black}
-                        />
-                    </TouchableOpacity>
-                }
-            />
-            <BottomTab
-                elevation={2}
-                route_name={route.name}
-                position="absolute"
-                bottom={0}
-            />
-            <ScrollView
-                style={{
-                    flex: 1,
-                    marginBottom: height * 0.1,
-                    marginTop: HEADER_HEIGHT - theme.spacing.l,
-                }}
+        categories?
+        <View className="h-full w-full">
+            <Header title={categories.display_name} goBack={()=>navigation.goBack()}/>
+            <BottomTab route_name={route.name}/>
+            <ScrollView className="flex-1 mt-2 mb-14"
+                showsVerticalScrollIndicator ={false}
             >
-                {CATEGORIES.map((c) => (
-                    <Box
-                        key={c.id}
-                        justifyContent="center"
-                        alignItems="center"
-                        marginVertical="s"
-                    >
-                        <CategoryCard
-                            width={width - theme.spacing.m * 2}
-                            image={{uri: c.image}}
-                            title={c.display_name}
-                            height={200}
-                            icon={
-                                <TouchableOpacity
-                                    onPress={() =>
-                                        navigation.navigate("Shop_Category", {
-                                            category: c,
-                                        })
-                                    }
-                                >
-                                    <Ionicons
-                                        name="ios-arrow-forward"
-                                        size={30}
-                                        color={theme.colors.white}
-                                    />
-                                </TouchableOpacity>
-                            }
-                        />
-                    </Box>
+                {categories?.ids.map((id,index) => (
+                    <CategoryCard key={index} id={id}/>
                 ))}
             </ScrollView>
-        </Layout>
+        </View>
+        :<View></View>
     );
 };
-
-
 
 export default ShopScreen;

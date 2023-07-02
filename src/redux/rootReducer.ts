@@ -1,16 +1,25 @@
 import { combineReducers } from "redux";
-import bagSlice from "./bag/bagSlice";
-import favouriteSlice from "./favourite/favouriteSlice";
-import orderSlice  from "./orders/orderSlice";
-import  productSlice from "./products/productSlice";
-import userSlice  from "./user/userSlice";
+import bagSlice from "./bag";
+import favoriteSlice from "./favorite";
+import orderSlice  from "./order/orderSlice";
+import categorySlice from "./category";
+import subCategorySlice from "./subcategory";
+import productSlice from "./product";
+import userSlice  from "./user";
+import advertiseSlice  from "./advertise";
+import displaySlice  from "./display";
+
 
 const rootReducer = combineReducers({
+    display:displaySlice,
+    advertise:advertiseSlice,
     user: userSlice,
-    products: productSlice,
+    category:categorySlice,
+    subCategory:subCategorySlice,
+    product: productSlice,
     bag: bagSlice,
-    favourite: favouriteSlice,
-    orders: orderSlice
+    favorite: favoriteSlice,
+    order: orderSlice
 })
 
 export default rootReducer

@@ -2,8 +2,11 @@ export {LoginMobileScreen} from './LoginMobilScreen'
 export {LoginWechatScreen} from './LoginWechatScreen'
 export {LoginAliScreen} from './LoginAliScreen'
 export {AuthenticationScreen} from './AuthenticationScreen'
-export {OnBoardingScreen} from './OnBoardingScreen'
-
+export {AdvertiseScreen} from './AdvertiseScreen'
+export {ProfileScreen} from './ProfileScreen'
+export {FavoriteScreen} from './FavoriteScreen'
+export {NewShippingAddressScreen} from './NewShippingAddressScreen'
+export {ShippingAddressesScreen} from './ShippingAddressesScreen'
 /*
 export {SetSeedScreen} from './SetSeedScreen'
 export {AutoSeedScereen} from './AutoSeedScereen'

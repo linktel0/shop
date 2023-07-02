@@ -4,7 +4,7 @@ import { Category, Order, Product, ShippingAddress } from "../redux/data_types"
 
 export type AppStackParamList = {
     AuthenticationScreen: undefined
-    OnBoarding: undefined
+    Advertise: undefined
     Auth: NavigatorScreenParams<AuthStackParamList>
     Main: NavigatorScreenParams<MainStackParamList>
 }
@@ -22,7 +22,7 @@ export type MainStackParamList = {
     Components: undefined
     Home: undefined
     Bag_Main: undefined
-    Favourite_Main: undefined
+    Favorite_Main: undefined
     
     Profile_Main: undefined
     Profile_Orders: undefined
@@ -41,7 +41,7 @@ export type MainStackParamList = {
         category: Category & {image: string}
     }
     Shop_Search: {
-        search_term: string | null
+        search_term: string | undefined
     }
     Shop_Product_Detail: {
         item: Product

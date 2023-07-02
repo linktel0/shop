@@ -1,17 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Dimensions, Image } from "react-native";
-import Layout from "../components/Layout";
-import {
-    CategoryScreenNavigationProps,
-    CategoryScreenRouteProps,
-} from "../navigation/ScreensNavigationRouteProps";
-import { Box, Text } from "../utils/restyle";
-
-import Constants from "expo-constants";
-import ExitIcon from "../components/forms/form_elements/ExitIcon";
+import { Dimensions } from "react-native";
+import {CategoryScreenProps} from "../navigation/ScreensNavigationRouteProps";
+import { Box } from "../utils/restyle";
+import {View,Text} from 'react-native'
 import { useTheme } from "@shopify/restyle";
 import { Theme } from "../utils/theme";
-import { SharedElement } from "react-navigation-shared-element";
 
 import Animated, {
     useAnimatedScrollHandler,
@@ -24,15 +17,12 @@ import ProductCard from "../components/cards/ProductCard";
 
 import { Product } from "../redux/data_types";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import FilterView from "../components/FilterView";
 import SortView from "../components/SortView";
 import ProductListing from "../components/ProductListing";
-
-interface CategoryScreenProps {
-    navigation: CategoryScreenNavigationProps;
-    route: CategoryScreenRouteProps;
-}
+import {IconButton} from 'react-native-paper'
+import {Header} from "../components/navigation/Header";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -41,13 +31,10 @@ const PRODUCT_WIDTH = width / 2;
 const HIDDEN_VIEW_HEIGHT = height * 0.4;
 const FILTER_VIEW_HEIGHT = height * 0.5;
 
-const AnimatedFlatlist = Animated.createAnimatedComponent(FlatList);
-const AnimatedBox = Animated.createAnimatedComponent(Box);
-
-const CategoryScreen: React.FC<CategoryScreenProps> = ({
+const CategoryScreen = ({
     route,
     navigation,
-}) => {
+}:CategoryScreenProps) => {
     const dispatch = useAppDispatch();
     const theme = useTheme<Theme>();
 
@@ -97,7 +84,8 @@ const CategoryScreen: React.FC<CategoryScreenProps> = ({
     // }, []);
 
     return (
-        <Layout no_padding>
+        <View className="h-full">
+            <Header title='商 品' goBack={()=>navigation.goBack()}/>
             <FilterView
                 height={FILTER_VIEW_HEIGHT}
                 width={width}
@@ -117,136 +105,59 @@ const CategoryScreen: React.FC<CategoryScreenProps> = ({
                 onClose={() => (sortTranslateY.value = FILTER_VIEW_HEIGHT + 15)}
             />
 
-            <AnimatedBox
-                width={width}
-                borderBottomRightRadius="l"
-                borderBottomLeftRadius="l"
-                overflow="hidden"
-                
-            >
-                <SharedElement
-                    id={`category-${route.params.category.display_name}`}
-                >
-                    <Image
-                        // width={width}
-                        // height={IMAGE_HEIGHT / 3}
-                        style={[
-                            {
-                                width,
-                                height: IMAGE_HEIGHT / 3,
-                                borderBottomLeftRadius: theme.borderRadii.l,
-                                borderBottomRightRadius: theme.borderRadii.l,
-                            },
-                        ]}
-                        source={{ uri: route.params.category.image }}
-                        resizeMode="cover"
-                    />
-                </SharedElement>
-                <Box position="absolute" bottom={20} left={20}>
-                    <Text variant="headline" color="white">
+            <Animated.View className="w-[width] rounded-b-2xl overflow-hidden pt-2">
+                {/*</View>sharedTransitionTag={`container-${product.id}`}*/}
+                {/* sharedTransitionTag={`category-${route.params.category.display_name}`} */}
+                <Animated.Image 
+                    resizeMode="cover"
+                    source={{uri: route.params.category.image}}
+                    style={{ width:width, height: IMAGE_HEIGHT / 3}}
+                />
+                <View className="absolute left-4 bottom-3 text-primary-light text-3xl font-bold">
+                    <Text className="text-2xl text-primary-light">
                         {route.params.category.display_name}
                     </Text>
-                </Box>
-                <Box
-                    position="absolute"
-                    top={Constants.statusBarHeight + theme.spacing.m}
-                    right={theme.spacing.m}
-                >
-                    <ExitIcon
-                        onPress={() => navigation.navigate("Shop_Main")}
-                    />
-                </Box>
-            </AnimatedBox>
-            <Box flex={1}>
-                <Box    
-                    bg='white'
-                    padding="m"
-                    flexDirection="row"
-                    justifyContent="space-between"
-                    borderRadius="m"
-                    elevation={1}
-                >
-                    <TouchableOpacity
+                </View>
+                <IconButton className="absolute right-4 top-20 w-8 h-8 bg-secondary-light rounded-full items-center -mt-4"
+                    icon="close"
+                    size={24}
+                    onPress={() => navigation.navigate("Shop_Main")}
+                />                    
+            </Animated.View>   
+            <View className="flex-1">
+                <View className="between-x bg-primary-light h-[48] p-3 mt-1rounded-xl">
+                    <TouchableOpacity className="flex-row items-center"
                         onPress={() => (filterTranslateY.value = 0)}
                     >
-                        <Box flexDirection="row" alignItems="center">
-                            <Ionicons
-                                name="filter-sharp"
-                                size={24}
-                                color={theme.colors.darkColor}
-                            />
-                            <Text marginLeft="s" variant="body2" opacity={0.7}>
-                                Filter
-                            </Text>
-                        </Box>
+                        <MaterialCommunityIcons
+                            name="filter-variant"
+                            size={24}
+                            color={'black'}
+                        />
+                        <Text className="ml-2 opacity-70">
+                            类别
+                        </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity
+                    <TouchableOpacity className="flex-row items-center"
                         onPress={() => (sortTranslateY.value = 0)}
                     >
-                        <Box flexDirection="row" alignItems="center">
-                            <MaterialCommunityIcons
-                                name="sort"
-                                size={24}
-                                color={theme.colors.darkColor}
-                            />
-                            <Text marginLeft="s" variant="body2" opacity={0.7}>
-                                Sort
-                            </Text>
-                        </Box>
-                    </TouchableOpacity>
-                </Box>
-                {/* {display ? (
-                    <Box>
-                        {products.length > 0 && (
-                            <AnimatedFlatlist
-                                ListHeaderComponent={
-                                    
-                                }
-                                data={products}
-                                keyExtractor={(p, i) => p.id.toString()}
-                                numColumns={2}
-                                onScroll={scrollHandler}
-                                scrollEventThrottle={16}
-                                renderItem={({ item }) => (
-                                    <ProductCard
-                                        width={
-                                            PRODUCT_WIDTH - theme.spacing.s * 2
-                                        }
-                                        is_in_bag={products_in_bag.includes(
-                                            item.id
-                                        )}
-                                        product={item}
-                                        onAddToBagPress={() => {
-                                            setSelectedProduct(item);
-                                            hiddenViewTranslateY.value = 0;
-                                        }}
-                                        onImagePress={() =>
-                                            navigation.navigate(
-                                                "Shop_Product_Detail",
-                                                { item: item }
-                                            )
-                                        }
-                                    />
-                                )}
-                            />
-                        )}
-                    </Box>
-                ) : (
-                    <Box flex={1} justifyContent="center" alignItems="center">
-                        <ActivityIndicator
-                            color={theme.colors.primary}
-                            size="large"
+                        <MaterialCommunityIcons
+                            name="sort"
+                            size={24}
+                            color={'black'}
                         />
-                    </Box>
-                )} */}
+                        <Text className="ml-2 opacity-70">
+                            价格
+                        </Text>
+                    </TouchableOpacity>
+                </View>
                 <ProductListing
-                flex={1}
-                    product_width={width / 2 - theme.spacing.s * 2}
+                    product_width={width / 2 - 8 * 2}
                     products={products}
                     products_in_bag={products_in_bag}
                 />
-            </Box>
-        </Layout>
+            </View>
+        </View>
     );
 };
 

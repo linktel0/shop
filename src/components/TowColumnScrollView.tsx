@@ -1,7 +1,6 @@
 import React from "react";
 
 import { BoxProps, useTheme } from "@shopify/restyle";
-import { Box, Text } from "../utils/restyle";
 import { Theme } from "../utils/theme";
 import { Product } from "../redux/data_types";
 import {
@@ -9,8 +8,7 @@ import {
     TouchableOpacity,
 } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/core";
-import { SharedElement } from "react-navigation-shared-element";
-import { Image,View } from "react-native";
+import { Image,View,Dimensions,Text } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import Animated, {
     useAnimatedGestureHandler,
@@ -20,97 +18,55 @@ import { useSharedValue } from "react-native-reanimated";
 import { PanGestureHandler } from "react-native-gesture-handler";
 import { useAnimatedStyle } from "react-native-reanimated";
 import { Card ,Avatar} from "react-native-paper";
+import * as product from "../redux/product";
+import { useAppSelector } from "../redux/hooks";
 
 interface TowColumnScrollViewProps {
-    width: number;
-    products: Product[];
-    products_in_bag: number[];
-    products_in_favourite: number[];
+    id: number;
 }
 
-const AnimatedBox = Animated.createAnimatedComponent(Box);
+//const AnimatedBox = Animated.createAnimatedComponent(Box);
 
 const TowColumnScrollView = ({
-    width,
-    products,
-    products_in_bag,
-    products_in_favourite,
+    id
 }:TowColumnScrollViewProps) => {
     const navigation = useNavigation<any>();
+    const { width} = Dimensions.get("screen");
     const PRODUCT_WIDTH = width / 2 - 16 * 2;
-    const right_products = products.filter((p) => p.id % 2 !== 0);
-    const left_products = products.filter((p) => p.id % 2 === 0);
+    const item = useAppSelector((state) => product.selectById(state.product.products,id))
 
     return (
-        <View className="center-x w-full">
-            <View>
-                {left_products.map((p) => (
-                    <View className="bg-primary rounded-2xl mb-4"
-                        key={p.id} style={{width:PRODUCT_WIDTH}}
-                    >
-                        <View className="ml-2">
-                            <Card
-                                onPress={() =>
-                                    navigation.navigate("Shop_Product_Detail", {item: p,})}
-                            >        
-                                <Card.Cover style = {{height:100}}
-                                    source={{ uri: p.thumbnail! }} />
-                                <Text className="p-2 text-xs font-bold h-14">
-                                    {p.name}
-                                </Text>
-                            </Card>
-                            <View className="between-x m-1">
-                                <Text className="text-primary-light">
-                                    ￥{`${p.price}`}
-                                </Text>
-                                <View className="flex-row">
-                                    {products_in_favourite.includes(p.id) &&<Avatar.Icon className="bg-primary"
-                                        size={32} icon="heart" color="white"/> } 
-                                    {products_in_favourite.includes(p.id) && <Avatar.Icon className="bg-primary"
-                                        size={32} icon="shopping-outline" color="white"/> }       
-                                </View>
-                            </View>
-                        </View>
-                    </View>
-                ))}
-            </View>
-            <View
-                style={{
-                    transform: [{ translateY: 20 }],
-                    marginHorizontal: 16,
-                }}
+        item
+        ?<View style={{width:width*0.5}}>
+            <View className="bg-primary rounded-2xl mb-4"
+                style={{width:PRODUCT_WIDTH}}
             >
-                {right_products.map((p) => (
-                    <View className="bg-primary rounded-2xl mb-4"
-                        key={p.id} style={{width:PRODUCT_WIDTH}}
-                    >
-                        <View className="ml-2">
-                            <Card
-                                onPress={() =>
-                                    navigation.navigate("Shop_Product_Detail", {item: p,})}
-                            >        
-                                <Card.Cover style = {{height:100}}
-                                    source={{ uri: p.thumbnail! }} />
-                                <Text className="p-2 text-xs font-bold h-14">
-                                    {p.name}
-                                </Text>
-                            </Card>
-                            <View className="between-x m-1">
-                                <Text className="text-primary-light">
-                                    ￥{`${p.price}`}
-                                </Text>
-                                <View className="flex-row">
-                                    {products_in_favourite.includes(p.id) &&<Avatar.Icon className="bg-primary"
-                                        size={32} icon="heart" color="white"/> } 
-                                    {products_in_favourite.includes(p.id) && <Avatar.Icon className="bg-primary"
-                                        size={32} icon="shopping-outline" color="white"/> }       
-                                </View>
-                            </View>
+                <View className="ml-2">
+                    <Card
+                        onPress={() =>
+                            navigation.navigate("Shop_Product_Detail", {item: item,})}
+                    >        
+                        <Card.Cover style = {{height:100}}
+                            source={{ uri: item.thumbnail! }} />
+                        <Text className="p-2 text-xs font-bold h-14">
+                            {item.name}
+                        </Text>
+                    </Card>
+                    <View className="between-x m-1">
+                        <Text className="text-primary-light">
+                            ￥{`${item.price}`}
+                        </Text>
+                        <View className="flex-row">
+                            {/*products_in_favorite.includes(p.id) &&<Avatar.Icon className="bg-primary"
+                                size={32} icon="heart" color="white"/> } 
+                            {products_in_favorite.includes(p.id) && <Avatar.Icon className="bg-primary"
+                        size={32} icon="shopping-outline" color="white"/> */}       
                         </View>
                     </View>
-                ))}
+                </View>
             </View>
         </View>
+        :<View/>
     );
 };
 

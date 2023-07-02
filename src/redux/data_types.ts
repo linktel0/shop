@@ -1,4 +1,24 @@
-import { ImageSourcePropType } from "react-native"
+import data from "./shop.json"
+export type TAdvertise = typeof data.advertises[number];
+export type TProduct = typeof data.products[number];
+export type TFavorite = typeof data.favorites[number];
+export type TDisplay = typeof data.displays[number];
+export type TCategory = typeof data.categories[number];
+export type TSubCategory = typeof data.sub_categories[number];
+export type TBagItem = typeof data.bagItems[number];
+export type TUser = typeof data.users[number];
+export type TAddress = typeof data.users[number]['shipping_addresses'][number];
+//export type TOrder = typeof data.users[number];
+//export type TUser = typeof data.users[number];
+//export type TUser = typeof data.users[number];
+
+
+export default data;
+
+export interface TItem {
+    id: number
+    value: number
+  }
 
 export enum SIZES {
     S = "S",
@@ -17,13 +37,6 @@ export enum OrderStatus {
 export enum Gender {
     MALE = "MALE",
     FEMALE = "FEMALE"
-}
-
-export type TAdvertise = {
-    id: number,
-    title: string,
-    subtitle: string,
-    image: string,
 }
 
 export type Product = {
@@ -64,7 +77,7 @@ export type Category = {
     id :number
     name: string
     display_name: string
-    sub_categories: SubCategory[] | []
+    sub_categories: SubCategory[]
     number_product: number
 }
 
@@ -72,8 +85,8 @@ export type SubCategory = {
     id: number
     name: string
     display_name: string
-    parent_category: Category | number
-    number_product: number
+    image:string
+    category: Category | number
 }
 
 export type ShippingAddress = {

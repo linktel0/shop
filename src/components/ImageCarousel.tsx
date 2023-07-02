@@ -1,9 +1,5 @@
 import React from "react";
 import { Dimensions } from "react-native";
-
-import { BoxProps } from "@shopify/restyle";
-import { Theme } from "../utils/theme";
-import { Box } from "../utils/restyle";
 import Animated, {
     useAnimatedGestureHandler,
     useAnimatedStyle,
@@ -15,11 +11,9 @@ import {
     PanGestureHandler,
 } from "react-native-gesture-handler";
 import { snapPoint } from "react-native-redash";
-import { Image } from "react-native";
+import { Image,View} from "react-native";
 
-import { SharedElement } from "react-navigation-shared-element";
-
-interface ImageCarouselProps extends BoxProps<Theme> {
+interface ImageCarouselProps {
     thumbnail: string;
     images: string[];
     imageHeight?: number;
@@ -29,16 +23,13 @@ interface ImageCarouselProps extends BoxProps<Theme> {
 
 const { width, height } = Dimensions.get("screen");
 
-const AnimatedBox = Animated.createAnimatedComponent(Box);
-
-const ImageCarousel: React.FC<ImageCarouselProps> = ({
+const ImageCarousel = ({
     thumbnail,
     images,
     imageHeight,
     imageWidth,
     productId,
-    ...rest
-}) => {
+}:ImageCarouselProps) => {
     const translateX = useSharedValue(0);
     const BOX_WIDTH = (images.length + 1) * width;
 
@@ -76,15 +67,18 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
         },
     });
     return (
-        <PanGestureHandler onGestureEvent={gestureHandler}>
-            <AnimatedBox
-                width={BOX_WIDTH}
-                flexDirection="row"
+        <View>
+
+        <PanGestureHandler 
+            onGestureEvent={gestureHandler}>
+            {/* 
+                sharedTransitionTag={`container-${productId}`}
+                sharedTransitionTag={`image-${productId}`} 
+            */}
+            <Animated.View className="flex-row w-[BOX_WIDTH]"
                 style={styles}
-                {...rest}
             >
-                <SharedElement id={`image-${productId}`}>
-                    <Image
+                    <Animated.Image
                         resizeMode={"cover"}
                         style={{
                             width: imageWidth ? imageWidth : width,
@@ -92,7 +86,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                         }}
                         source={{ uri: thumbnail }}
                     />
-                </SharedElement>
+
                 {images.map((m, index) => (
                     <Image
                         key={index}
@@ -104,8 +98,9 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                         source={{ uri: m }}
                     />
                 ))}
-            </AnimatedBox>
+            </Animated.View>
         </PanGestureHandler>
+        </View>
     );
 };
 

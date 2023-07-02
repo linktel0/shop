@@ -1,6 +1,7 @@
 import 'react-native-reanimated'
-import React, { useEffect } from "react";
+import React from "react";
 import {View,Text} from "react-native";
+
 import { Provider } from "react-redux";
 import { useFonts } from "expo-font";
 import { useAssets } from 'expo-asset'
@@ -9,6 +10,8 @@ import Navigation from "./src/navigation";
 import store from "./src/redux/store";
 import { Entypo, Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import "nativewind/types.d";
+import Waiting from './src/components/Waiting';
+
 export default function App() {
     
     const [assets, error] = useAssets([
@@ -17,7 +20,6 @@ export default function App() {
         require('./assets/jewelry.jpg'),
         require('./assets/women.jpg'),
         require('./assets/men.jpg'),
-
     ])
 
     const [fontLoaded] = useFonts({
@@ -36,12 +38,13 @@ export default function App() {
     });
 
     if (!fontLoaded || !assets) {
-        return <></>;
+        return <View className='center-x h-full'><Waiting/></View>;
     } else {
+        
         return (
             <Provider store={store}>
                 <Navigation/>
-            </Provider>
+            </Provider>   
         );
     }
 }

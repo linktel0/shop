@@ -15,15 +15,15 @@ export type AuthenticationScreenProps = {
  };
 
 
-export type OnBoardingScreenNavigationProps = StackNavigationProp<AppStackParamList, 'OnBoarding'>
-export type OnBoardingScreenRouteProps = RouteProp<
+export type AdvertiseScreenNavigationProps = StackNavigationProp<AppStackParamList, 'Advertise'>
+export type AdvertiseScreenRouteProps = RouteProp<
     AppStackParamList, 
-    'OnBoarding'
+    'Advertise'
 >
 
-export type OnBoardingScreenProps = {
-    route: OnBoardingScreenRouteProps;
-    navigation: OnBoardingScreenNavigationProps;
+export type AdvertiseScreenProps = {
+    route: AdvertiseScreenRouteProps;
+    navigation: AdvertiseScreenNavigationProps;
  };
 
 
@@ -87,75 +87,141 @@ export interface HomeScreenProps {
     route: HomeScreenRouteProps;
 }
 
-
-export type BagScreenNavigationProps = CompositeNavigationProp<
+type BagScreenRouteProps = RouteProp<MainStackParamList, 'Bag_Main'>
+type BagScreenNavigationProps = CompositeNavigationProp<
     StackNavigationProp<MainStackParamList, 'Bag_Main'>,
     StackNavigationProp<AppStackParamList>
 >
-export type FavouriteScreenNavigationProps = CompositeNavigationProp<
-    StackNavigationProp<MainStackParamList, 'Favourite_Main'>,
+export interface BagScreenProps {
+    navigation: BagScreenNavigationProps;
+    route: BagScreenRouteProps;
+}
+
+type FavoriteScreenRouteProps = RouteProp<MainStackParamList, 'Favorite_Main'>
+type FavoriteScreenNavigationProps = CompositeNavigationProp<
+    StackNavigationProp<MainStackParamList, 'Favorite_Main'>,
     StackNavigationProp<AppStackParamList>
 >
-
-
+export interface FavoriteScreenProps {
+    navigation: FavoriteScreenNavigationProps;
+    route: FavoriteScreenRouteProps;
+}
 
 //----
-
-export type ShopScreenScreenNavigationProps = CompositeNavigationProp<
+type ShopScreenRouteProps = RouteProp<MainStackParamList, 'Shop_Main'>
+type ShopScreenScreenNavigationProps = CompositeNavigationProp<
     StackNavigationProp<MainStackParamList, 'Shop_Main'>,
     StackNavigationProp<AppStackParamList>
 >
+export interface ShopScreenProps {
+    navigation: ShopScreenScreenNavigationProps;
+    route: ShopScreenRouteProps;
+}
 
-export type ProductDetailScreenNavigationProps = CompositeNavigationProp<
+
+
+type ProductDetailScreenRouteProps = RouteProp<MainStackParamList, 'Shop_Product_Detail'>
+type ProductDetailScreenNavigationProps = CompositeNavigationProp<
     StackNavigationProp<MainStackParamList, 'Shop_Product_Detail'>,
     StackNavigationProp<AppStackParamList>
 >
-export type SearchScreenNavigationProps = CompositeNavigationProp<
+
+export interface ProductDetailProps {
+    navigation: ProductDetailScreenNavigationProps;
+    route: ProductDetailScreenRouteProps;
+}
+
+type SearchScreenRouteProps = RouteProp<MainStackParamList, 'Shop_Search'>
+type SearchScreenNavigationProps = CompositeNavigationProp<
     StackNavigationProp<MainStackParamList, 'Shop_Search'>,
     StackNavigationProp<AppStackParamList>
 >
-export type CategoryScreenNavigationProps = CompositeNavigationProp<
+
+export interface SearchScreenProps {
+    navigation: SearchScreenNavigationProps;
+    route: SearchScreenRouteProps;
+}
+
+type CategoryScreenRouteProps = RouteProp<MainStackParamList, 'Shop_Category'>
+type CategoryScreenNavigationProps = CompositeNavigationProp<
     StackNavigationProp<MainStackParamList, 'Shop_Category'>,
     StackNavigationProp<AppStackParamList>
 >
 
+export interface CategoryScreenProps {
+    navigation: CategoryScreenNavigationProps;
+    route: CategoryScreenRouteProps;
+}
 
 // ----
-
-export type ProfileScreenNavigationProps = CompositeNavigationProp<
+type ProfileScreenRouteProps = RouteProp<MainStackParamList, 'Profile_Main'>
+type ProfileScreenNavigationProps = CompositeNavigationProp<
     StackNavigationProp<MainStackParamList, 'Profile_Main'>,
     StackNavigationProp<AppStackParamList>
 >
 
+export interface ProfileScreenProps {
+    navigation: ProfileScreenNavigationProps;
+    route: ProfileScreenRouteProps;
+}
 
-export type ShippingAddressesScreenNavigationProps = CompositeNavigationProp<
+type ShippingAddressesScreenRouteProps = RouteProp<MainStackParamList, 'Profile_ShippingAddresses'>
+type ShippingAddressesScreenNavigationProps = CompositeNavigationProp<
     StackNavigationProp<MainStackParamList, 'Profile_ShippingAddresses'>,
     StackNavigationProp<AppStackParamList>
 >
+export interface ShippingAddressesScreenProps {
+    navigation: ShippingAddressesScreenNavigationProps;
+    route: ShippingAddressesScreenRouteProps;
+}
 
-export type OrdersScreenNavigationProps = CompositeNavigationProp<
+type OrdersScreenRouteProps = RouteProp<MainStackParamList, 'Profile_Orders'>
+type OrdersScreenNavigationProps = CompositeNavigationProp<
     StackNavigationProp<MainStackParamList, 'Profile_Orders'>,
     StackNavigationProp<AppStackParamList>
 >
-export type OrderDetailScreenNavigationProps = CompositeNavigationProp<
+export interface OrdersScreenProps {
+    navigation: OrdersScreenNavigationProps;
+    route: OrdersScreenRouteProps;
+}
+
+type OrderDetailScreenRouteProps = RouteProp<MainStackParamList, 'Profile_Order_Detail'>
+type OrderDetailScreenNavigationProps = CompositeNavigationProp<
     StackNavigationProp<MainStackParamList, 'Profile_Order_Detail'>,
     StackNavigationProp<AppStackParamList>
 >
+export interface OrderDetailScreenProps {
+    navigation: OrderDetailScreenNavigationProps;
+    route: OrderDetailScreenRouteProps;
+}
+
 
 export type UserReviewsScreenNavigationProps = CompositeNavigationProp<
     StackNavigationProp<MainStackParamList, 'Profile_Reviews'>,
     StackNavigationProp<AppStackParamList>
 >
 
-export type SettingsScreenNavigationProps = CompositeNavigationProp<
+type SettingScreenRouteProps = RouteProp<MainStackParamList, 'Profile_Settings'>
+type SettingScreenNavigationProps = CompositeNavigationProp<
     StackNavigationProp<MainStackParamList, 'Profile_Settings'>,
     StackNavigationProp<AppStackParamList>
 >
 
-export type NewShippingAddressScreenNavigationProps = CompositeNavigationProp<
+export interface SettingScreenProps {
+    navigation: SettingScreenNavigationProps;
+    route: SettingScreenRouteProps;
+}
+
+type NewShippingAddressScreenRouteProps = RouteProp<MainStackParamList, 'Profile_New_Address'>
+type NewShippingAddressScreenNavigationProps = CompositeNavigationProp<
     StackNavigationProp<MainStackParamList, 'Profile_New_Address'>,
     StackNavigationProp<AppStackParamList>
 >
+
+export interface NewShippingAddressScreenProps {
+    navigation: NewShippingAddressScreenNavigationProps;
+    route: NewShippingAddressScreenRouteProps;
+}
 
 
 
@@ -167,22 +233,10 @@ export type RegisterScreenRouteProps = RouteProp<AuthStackParamList, 'Register'>
 // Main Stack route props
 
 export type ComponentsScreenRouteProps = RouteProp<MainStackParamList, 'Home'>
-export type BagScreenRouteProps = RouteProp<MainStackParamList, 'Bag_Main'>
-export type FavouriteScreenRouteProps = RouteProp<MainStackParamList, 'Favourite_Main'>
+
 
 // ----
 
-export type ProfileScreenRouteProps = RouteProp<MainStackParamList, 'Profile_Main'>
-export type ShippingAdressesScreenRouteProps = RouteProp<MainStackParamList, 'Profile_ShippingAddresses'>
-export type OrdersScreenRouteProps = RouteProp<MainStackParamList, 'Profile_Orders'>
-export type OrderDetailScreenRouteProps = RouteProp<MainStackParamList, 'Profile_Order_Detail'>
 export type UserReviewsScreenRouteProps = RouteProp<MainStackParamList, 'Profile_Reviews'>
-export type SettingsScreenRouteProps = RouteProp<MainStackParamList, 'Profile_Settings'>
 export type NewShippingAddessScreenRouteProps = RouteProp<MainStackParamList, 'Profile_New_Address'>
 
-// ----
-
-export type ShopScreenRouteProps = RouteProp<MainStackParamList, 'Shop_Main'>
-export type ProductDetailScreenRouteProps = RouteProp<MainStackParamList, 'Shop_Product_Detail'>
-export type SearchScreenRouteProps = RouteProp<MainStackParamList, 'Shop_Search'>
-export type CategoryScreenRouteProps = RouteProp<MainStackParamList, 'Shop_Category'>

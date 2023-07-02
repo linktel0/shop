@@ -1,170 +1,44 @@
 import React, { useState } from "react";
-import { Dimensions, ScrollView } from "react-native";
-
-import Layout from "../components/Layout";
+import { ScrollView,View,Text, Dimensions } from "react-native";
 import BottomTab from "../components/navigation/BottomTab";
-import {
-    ShippingAddressesScreenNavigationProps,
-    ShippingAdressesScreenRouteProps,
-} from "../navigation/ScreensNavigationRouteProps";
-
-import { useTheme } from "@shopify/restyle";
-import { Theme } from "../utils/theme";
+import {ShippingAddressesScreenProps} from "../navigation/ScreensNavigationRouteProps";
 import Header from "../components/navigation/Header";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { Entypo, Ionicons } from "@expo/vector-icons";
-import { Box } from "../utils/restyle";
-
 import ShippingAddressCard from "../components/cards/ShippingAddressCard";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { ShippingAddress } from "../redux/data_types";
-import { removeShippingAddress } from "../redux/user/userSlice";
-import { AnimatePresence } from "framer-motion";
-import { MotiView } from "@motify/components";
-import { Image } from "react-native";
+import { removeShippingAddress, setDefaultAddress } from "../redux/user";
+import Animated, { SlideInLeft, SlideOutRight } from "react-native-reanimated";
+import { IconButton } from "react-native-paper";
+import { EditAddress } from "../components/EditAddress";
+import { TAddress } from "../redux/data_types";
+import ShippingAddress from "../components/ShippingAddresses";
 
-interface ShippingAddressesScreenProps {
-    navigation: ShippingAddressesScreenNavigationProps;
-    route: ShippingAdressesScreenRouteProps;
-}
 
-const { width, height } = Dimensions.get("screen");
-const HEADER_HEIGHT = height * 0.12;
-
-const ShippingAddressesScreen: React.FC<ShippingAddressesScreenProps> = ({
+export const ShippingAddressesScreen = ({
     route,
     navigation,
-}) => {
-    const theme = useTheme<Theme>();
+}:ShippingAddressesScreenProps) => {
+    const [show,setShow] = useState(false);
+    const [address,SetAddress] = useState<TAddress>();
     const dispatch = useAppDispatch();
     const shippingAddresses = useAppSelector(
         (state) => state.user.current_user?.shipping_addresses
     );
+
+    const onNewAddress = () =>{
+        setShow(false)
+        SetAddress(undefined);
+    }
     return (
-        <Layout bg={shippingAddresses!.length > 0 ? 'background' : 'white'}>
-            <Header
-                height={HEADER_HEIGHT}
-                elevation={2}
-                title="Shipping Addresses"
-                position="absolute"
-                paddingHorizontal="m"
-                top={0}
-                left_icon={
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate("Profile_Main")}
-                    >
-                        <Ionicons
-                            name="arrow-back"
-                            size={30}
-                            color={theme.colors.darkColor}
-                        />
-                    </TouchableOpacity>
-                }
-                right_icon={
-                    <TouchableOpacity
-                        onPress={() =>
-                            navigation.navigate("Profile_New_Address", {
-                                shipping_address: null,
-                            })
-                        }
-                    >
-                        <Entypo
-                            name="plus"
-                            size={30}
-                            color={theme.colors.darkColor}
-                        />
-                    </TouchableOpacity>
-                }
-            />
-            <BottomTab
-                elevation={5}
-                route_name={route.name}
-                position="absolute"
-                bottom={0}
-            />
-            <ScrollView
-                style={{
-                    flex: 1,
-                    marginBottom: height * 0.1,
-                    marginTop: HEADER_HEIGHT - theme.spacing.l,
-                }}
-            >
-                <Box marginHorizontal="s">
-                    <AnimatePresence>
-                        {shippingAddresses && shippingAddresses.length > 0 ? (
-                            shippingAddresses.map(
-                                (sh: ShippingAddress, i: number) => (
-                                    <MotiView
-                                        key={sh.id}
-                                        from={{
-                                            opacity: 0,
-                                            translateX: -width,
-                                        }}
-                                        animate={{ opacity: 1, translateX: 0 }}
-                                        exit={{
-                                            opacity: 0,
-                                            translateX: -width,
-                                        }}
-                                        transition={{
-                                            type: "timing",
-                                            duration: 300,
-                                            delay: i * 10,
-                                        }}
-                                        exitTransition={{
-                                            type: "timing",
-                                            duration: 300,
-                                        }}
-                                    >
-                                        <ShippingAddressCard
-                                            elevation={1}
-                                            address={sh}
-                                            onCheckBoxChange={(v) => {}}
-                                            onEditPress={() =>
-                                                navigation.navigate(
-                                                    "Profile_New_Address",
-                                                    { shipping_address: sh }
-                                                )
-                                            }
-                                            onDeletePress={() =>
-                                                dispatch(
-                                                    removeShippingAddress(sh.id)
-                                                )
-                                            }
-                                        />
-                                    </MotiView>
-                                )
-                            )
-                        ) : (
-                            <MotiView
-                                from={{
-                                    opacity: 0
-                                }}
-                                animate={{
-                                    opacity: 1
-                                }}
-                                delay={300}
-                            >
-                            <Box
-                                flex={1}
-                                justifyContent="center"
-                                alignItems="center"
-                            >
-                                <Image
-                                    source={require("../../assets/empty.png")}
-                                    resizeMode="contain"
-                                    style={{
-                                        width: width * 0.6,
-                                        height: height * 0.6,
-                                    }}
-                                />
-                            </Box>
-                            </MotiView>
-                        )}
-                    </AnimatePresence>
-                </Box>
+        <View className="w-full h-full bg-primary-light pt-5">
+            {!show &&<Header title="Shipping Addresses" goBack={() => navigation.navigate("Profile_Main")}/>}
+            <BottomTab route_name={route.name}/>
+            <ScrollView className="flex-1">
+                <View className="mb-16">
+                    <ShippingAddress/>
+                </View>
             </ScrollView>
-        </Layout>
+        </View>
     );
 };
 
-export default ShippingAddressesScreen;
+

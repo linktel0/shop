@@ -10,29 +10,29 @@ import {
 } from "./data_types";
 
 
-export const advertise:TAdvertise[] = [
+export const advertises:TAdvertise[] = [
     {
         id: 0,
         title: "欢  迎",
-        subtitle: "床上用品九块九，棉衣九块九，洗脸盆九块九，洗衣粉九块九，厨具九块九，每件都是九块九，样样也是九块九，请广大朋友快来选购。",
+        description: "床上用品九块九，棉衣九块九，洗脸盆九块九，洗衣粉九块九，厨具九块九，每件都是九块九，样样也是九块九，请广大朋友快来选购。",
         image:"https://github.com/linktel0/image/raw/master/ecommerce/welcome.png",
     },
     {
         id: 1,
         title: "促 销",
-        subtitle: "欢乐节日 劲爆优惠大行动!",
+        description: "欢乐节日 劲爆优惠大行动!",
         image: "https://github.com/linktel0/image/raw/master/ecommerce/shopping_app.png",
     },
     {
         id: 2,
         title: "抽 奖",
-        subtitle: "刮卡赢好礼，产品更超值。",
+        description: "刮卡赢好礼，产品更超值。",
         image: "https://github.com/linktel0/image/raw/master/ecommerce/web_shopping.png",
     },
     {
         id: 3,
         title: "送欢喜",
-        subtitle: "圣诞礼物天天送",
+        description: "圣诞礼物天天送",
         image: "https://github.com/linktel0/image/raw/master/ecommerce/successful_purchase.png",
     },
 ];

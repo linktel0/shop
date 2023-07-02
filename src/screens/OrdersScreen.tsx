@@ -1,7 +1,6 @@
-import { Entypo, Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@shopify/restyle";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Dimensions, ScrollView } from "react-native";
+import { Dimensions, ScrollView,View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Animated, {
     useAnimatedStyle,
@@ -12,31 +11,18 @@ import Animated, {
 import OrderCard from "../components/cards/OrderCard";
 import Chip from "../components/Chip";
 
-import Layout from "../components/Layout";
 import BottomTab from "../components/navigation/BottomTab";
 import Header from "../components/navigation/Header";
-import {
-    OrdersScreenNavigationProps,
-    OrdersScreenRouteProps,
-} from "../navigation/ScreensNavigationRouteProps";
+import {OrdersScreenProps} from "../navigation/ScreensNavigationRouteProps";
 import { OrderStatus } from "../redux/data_types";
 import { useAppSelector } from "../redux/hooks";
-import { Box } from "../utils/restyle";
-import { Theme } from "../utils/theme";
-
-interface OrdersScreenProps {
-    navigation: OrdersScreenNavigationProps;
-    route: OrdersScreenRouteProps;
-}
+import  Waiting  from "../components/Waiting";
 
 const { width, height } = Dimensions.get("screen");
 
 const HEADER_HEIGHT = height * 0.12;
 
-const AnimatedBox = Animated.createAnimatedComponent(Box);
-
-const OrdersScreen: React.FC<OrdersScreenProps> = ({ route, navigation }) => {
-    const theme = useTheme<Theme>();
+const OrdersScreen = ({ route, navigation }:OrdersScreenProps) => {
     const orders = useAppSelector((state) => state.orders.orderItems);
 
     const [display, setDisplay] = useState(false);
@@ -55,46 +41,11 @@ const OrdersScreen: React.FC<OrdersScreenProps> = ({ route, navigation }) => {
     }, []);
 
     return (
-        <Layout>
-            <Header
-                height={HEADER_HEIGHT}
-                elevation={2}
-                title="Orders"
-                position="absolute"
-                paddingHorizontal='m'
-                top={0}
-                left_icon={
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate("Profile_Main")}
-                    >
-                        <Ionicons
-                            name="arrow-back"
-                            size={30}
-                            color={theme.colors.darkColor}
-                        />
-                    </TouchableOpacity>
-                }
-            />
-            <BottomTab
-                elevation={5}
-                route_name={route.name}
-                position="absolute"
-                bottom={0}
-            />
-            <ScrollView
-                style={{
-                    flex: 1,
-                    marginBottom: height * 0.1,
-                    marginTop: HEADER_HEIGHT - theme.spacing.l,
-                }}
-            >
-                {/* <ScrollView horizontal style={{flex: 1}} > */}
-                    <Box
-                        
-                        flexDirection='row'
-                        justifyContent='space-between'
-                    >
-
+        <View className="w-full h-full bg-primary-light">
+            <Header title="Orders" goBack={() => navigation.navigate("Profile_Main")}/>
+            <BottomTab route_name={route.name}/>
+            <ScrollView className="flex-1 mb-12 mt-20">
+                <View className="between-x">
                     <Chip
                         textProps={{
                             color:
@@ -155,17 +106,13 @@ const OrdersScreen: React.FC<OrdersScreenProps> = ({ route, navigation }) => {
                             translateX.value = 2 * -width;
                         }}
                     />
-                    </Box>
-                {/* </ScrollView> */}
+                </View>
                 {display ? (
-                    <AnimatedBox
-                        flex={1}
-                        width={width * 3}
-                        flexDirection="row"
+                    <Animated.View className="flex-1 flex-row"
                         style={animatedStyles}
                     >
-                        <Box width={width}>
-                            <ScrollView style={{}}>
+                        <View className="w-full">
+                            <ScrollView >
                                 {orders
                                     .filter(
                                         (o) => o.status === OrderStatus.PENDING
@@ -185,9 +132,9 @@ const OrdersScreen: React.FC<OrdersScreenProps> = ({ route, navigation }) => {
                                         />
                                     ))}
                             </ScrollView>
-                        </Box>
-                        <Box width={width}>
-                            <ScrollView style={{}}>
+                        </View>
+                        <View className="w-full">
+                            <ScrollView >
                                 {orders
                                     .filter(
                                         (o) => o.status === OrderStatus.SUCCESS
@@ -207,9 +154,9 @@ const OrdersScreen: React.FC<OrdersScreenProps> = ({ route, navigation }) => {
                                         />
                                     ))}
                             </ScrollView>
-                        </Box>
-                        <Box width={width}>
-                            <ScrollView style={{}}>
+                        </View>
+                        <View className="w-full">
+                            <ScrollView>
                                 {orders
                                     .filter(
                                         (o) =>
@@ -230,18 +177,15 @@ const OrdersScreen: React.FC<OrdersScreenProps> = ({ route, navigation }) => {
                                         />
                                     ))}
                             </ScrollView>
-                        </Box>
-                    </AnimatedBox>
+                        </View>
+                    </Animated.View>
                 ) : (
-                    <Box flex={1} justifyContent="center" alignItems="center">
-                        <ActivityIndicator
-                            size="large"
-                            color={theme.colors.primary}
-                        />
-                    </Box>
+                    <View className="center-x w-full h-full">
+                        <Waiting/>
+                    </View>
                 )}
             </ScrollView>
-        </Layout>
+        </View>
     );
 };
 

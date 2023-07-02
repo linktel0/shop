@@ -1,21 +1,15 @@
 import React, { useState } from "react";
-import {} from "react-native";
-
-import { BoxProps, useTheme } from "@shopify/restyle";
-import { Box, Text } from "../utils/restyle";
-import { Theme } from "../utils/theme";
-
+import {View,Text} from "react-native";
 import Animated, {
     useAnimatedStyle,
     withTiming,
 } from "react-native-reanimated";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
-import ExitIcon from "./forms/form_elements/ExitIcon";
 import Selectables from "./Selectables";
 import SelectableColors from "./SelectableColors";
-import Button from "./forms/form_elements/Button";
+import {Button,IconButton} from 'react-native-paper'
 
-interface FilterViewProps extends BoxProps<Theme> {
+interface FilterViewProps {
     width: number;
     height: number;
     onClose(): void;
@@ -27,18 +21,13 @@ interface FilterViewProps extends BoxProps<Theme> {
     }): void;
 }
 
-const AnimatedBox = Animated.createAnimatedComponent(Box);
-
-const FilterView: React.FC<FilterViewProps> = ({
+const FilterView = ({
     width,
     height,
     onClose,
     translateY,
     onApply,
-    ...rest
-}) => {
-    const theme = useTheme<Theme>();
-
+}:FilterViewProps) => {
     const [selectedCategory, setSelectedCategory] = useState("ALL");
     const [selectedSubCategory, setSelectedSubCategory] = useState("ALL");
     const [selectedColor, setSelectedColor] = useState("Black");
@@ -46,54 +35,36 @@ const FilterView: React.FC<FilterViewProps> = ({
         transform: [{ translateY: withTiming(translateY.value) }],
     }));
     return (
-        <AnimatedBox
-            width={width}
-            height={height}
-            borderTopLeftRadius="xl"
-            borderTopRightRadius="xl"
-            bg="white"
-            elevation={20}
-            position={"absolute"}
-            bottom={0}
-            zIndex={7777777}
+        <Animated.View className="w-full px-4 bg-secondary-light/100 absolute bottom-0 z-50 rounded-2xl"
             style={styles}
-            {...rest}
         >
-            <Box position="absolute" top={-15} left={width / 2 - 15}>
-                <TouchableOpacity>
-                    <ExitIcon onPress={onClose} />
-                </TouchableOpacity>
-            </Box>
-            <ScrollView
+            <View className="w-full center-x" > 
+                <IconButton className="w-8 h-8 bg-secondary-light rounded-full items-center -mt-4"
+                    icon="close"
+                    size={24}
+                    onPress={onClose}
+                />
+            </View>
+
+            <ScrollView className="flex-1 mt-2"
                 showsVerticalScrollIndicator={false}
-                style={{ flex: 1, marginTop: theme.spacing.xl }}
             >
-                <Box>
-                    <Box marginVertical="m">
-                        <Text
-                            paddingHorizontal="m"
-                            variant="body2"
-                            opacity={0.5}
-                        >
-                            SELECT CATEGORY
+                <View>
+                    <View>
+                        <Text className="opacity-50">
+                            选择分类
                         </Text>
                         <Selectables
-                            marginVertical="s"
                             value={selectedCategory}
                             items={["ALL", "MEN", "WOMEN", "KIDS"]}
                             onChange={(v) => setSelectedCategory(v)}
                         />
-                    </Box>
-                    <Box marginVertical="m">
-                        <Text
-                            paddingHorizontal="m"
-                            variant="body2"
-                            opacity={0.5}
-                        >
-                            SELECT SUB-CATEGORY
+                    </View>
+                    <View>
+                        <Text className="opacity-50">
+                            选择子类
                         </Text>
                         <Selectables
-                            marginVertical="s"
                             value={selectedSubCategory}
                             items={[
                                 "ALL",
@@ -105,17 +76,12 @@ const FilterView: React.FC<FilterViewProps> = ({
                             ]}
                             onChange={(v) => setSelectedSubCategory(v)}
                         />
-                    </Box>
-                    <Box marginVertical="m">
-                        <Text
-                            paddingHorizontal="m"
-                            variant="body2"
-                            opacity={0.5}
-                        >
-                            SELECT COLOR
+                    </View>
+                    <View className="m-1">
+                        <Text className="opacity-50">
+                            选择颜色
                         </Text>
                         <SelectableColors
-                            marginVertical="s"
                             value={selectedColor}
                             items={[
                                 "Black",
@@ -127,23 +93,22 @@ const FilterView: React.FC<FilterViewProps> = ({
                             ]}
                             onChange={(v) => setSelectedColor(v)}
                         />
-                    </Box>
-                    <Box paddingHorizontal="m">
-                        <Button
-                            title="APPLY"
-                            variant="PRIMARY"
-                            onPress={() =>
-                                onApply({
-                                    category: selectedCategory,
-                                    sub_category: selectedSubCategory,
-                                    color: selectedColor,
-                                })
-                            }
-                        />
-                    </Box>
-                </Box>
+                    </View>
+                    <Button className="bg-primary m-4 rounded-full p-2"
+                        textColor="white"
+                        onPress={() =>
+                            onApply({
+                                category: selectedCategory,
+                                sub_category: selectedSubCategory,
+                                color: selectedColor,
+                            })}
+                        >
+                        APPLY
+                    </Button>
+                   
+                </View>
             </ScrollView>
-        </AnimatedBox>
+        </Animated.View>
     );
 };
 

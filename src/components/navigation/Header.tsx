@@ -1,52 +1,26 @@
-import React, { ReactNode } from "react";
-import { Dimensions, LayoutChangeEvent, StyleSheet } from "react-native";
+import { Appbar,Avatar, IconButton } from "react-native-paper";
+import {TouchableOpacity,Text, View} from 'react-native'
 
-import { BoxProps } from "@shopify/restyle";
-import { Box, Text } from "../../utils/restyle";
-import { Theme } from "../../utils/theme";
-
-interface HeaderProps extends BoxProps<Theme> {
-    title: string;
-    left_icon?: ReactNode;
-    right_icon?: ReactNode;
-    onLayout?: ((event: LayoutChangeEvent) => void) | undefined
-}
-
-const { width, height } = Dimensions.get("screen");
-
-const Header: React.FC<HeaderProps> = ({
-    title,
-    left_icon,
-    right_icon,
-    onLayout,
-    ...rest
-}) => {
-    return (
-        <Box
-            onLayout={onLayout}
-            width={width}
-            borderBottomRightRadius="m"
-            borderBottomLeftRadius="m"
-            flexDirection="row"
-            justifyContent="space-between"
-            alignItems="center"
-            bg="white"
-            paddingHorizontal="s"
-            paddingTop="xl"
-            paddingBottom="m"
-            {...rest}
-        >
-            {left_icon ? left_icon : <Box p="m" />}
-            <Text variant="headline2">{title}</Text>
-            {right_icon ? right_icon : <Box p="m" />}
-        </Box>
-    );
+type Props = {
+  goBack?: () => void;
+  title?: string;
 };
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-});
+const Header = ({goBack,title}:Props) => {
+  if (title === undefined) title = ''
+
+  return(
+    <Appbar.Header className="h-12">
+      <View className="flex-row items-center w-full">
+        <IconButton
+            icon="arrow-left-thin"
+            size={40}
+            onPress={goBack}
+        /> 
+        <Text className="font-semibold text-xl">{title}</Text>
+      </View>
+    </Appbar.Header>
+  )
+};
 
 export default Header;

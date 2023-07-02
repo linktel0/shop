@@ -17,17 +17,17 @@ const BottomTab = ({ route_name}:BottomTabProps) => {
             />
             <IconButton size={24} icon="cart-variant" 
                 onPress={() => navigation.navigate('Shop_Main')}
-                iconColor={route_name.startsWith("Shop")? 'red': 'gray'}            
+                iconColor={route_name.startsWith("Shop_Main")? 'red': 'gray'}            
             />
                 
-            <IconButton size={24} icon="shopping-outline" 
+            <IconButton size={24} icon="shopping" 
                 onPress={() => navigation.navigate('Bag_Main')}
                 iconColor={route_name.startsWith("Bag")? 'red': 'gray'}            
             />
             
             <IconButton size={24} icon="heart" 
-                onPress={() => navigation.navigate('Favourite_Main')}
-                iconColor={route_name.startsWith("Favourite")? 'red': 'gray'}            
+                onPress={() => navigation.navigate('Favorite_Main')}
+                iconColor={route_name.startsWith("Favorite")? 'red': 'gray'}            
             />
             
            <IconButton size={30} icon="account-details" 
