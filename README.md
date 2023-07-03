@@ -10,7 +10,7 @@ The app's UI is built using tailwindcss and react native paper, resulting in a v
 ## Installation
 
 ```bash
-$ npm install
+$ yarn
 ```
 
 ## Running the app
@@ -18,7 +18,7 @@ $ npm install
 ```bash
 
 # development
-$ npm start
+$ npx expo start
 
 ```
 
